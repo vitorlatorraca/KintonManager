@@ -1,0 +1,144 @@
+flowchart TD
+    A[Abrir App] --> B{Usuário logado?}
+    
+    %% Fluxo de Login/Cadastro
+    B -->|Não| C[Tela de Login]
+    C --> D[Inserir celular e senha]
+    D --> E{Dados válidos?}
+    E -->|Não| F[Mostrar erro<br/>Tentar novamente]
+    F --> D
+    E -->|Sim| G{Primeiro acesso?}
+    G -->|Sim| H[Tela de Boas-vindas<br/>Tutorial rápido]
+    H --> I[Dashboard Principal]
+    G -->|Não| I
+    
+    %% Opção de cadastro
+    C --> J[Não tem conta?<br/>Cadastre-se]
+    J --> K[Tela de Cadastro]
+    K --> L[Inserir: Nome, Celular, Senha]
+    L --> M{Dados válidos?}
+    M -->|Não| N[Mostrar erro<br/>Corrigir dados]
+    N --> L
+    M -->|Sim| O[Conta criada!<br/>Login automático]
+    O --> H
+    
+    %% Esqueci senha
+    C --> P[Esqueci minha senha]
+    P --> Q[Inserir celular]
+    Q --> R[Enviar SMS com código]
+    R --> S[Inserir código SMS]
+    S --> T{Código válido?}
+    T -->|Não| U[Código inválido<br/>Tentar novamente]
+    U --> S
+    T -->|Sim| V[Criar nova senha]
+    V --> W[Senha alterada!<br/>Fazer login]
+    W --> C
+    
+    %% Dashboard Principal (Cliente)
+    B -->|Sim| AA{Tipo de usuário?}
+    AA -->|Cliente| I[Dashboard Principal]
+    I --> BB[Mostrar:<br/>• Stamps atuais X/10<br/>• Barra de progresso<br/>• Gyozas disponíveis<br/>• Botão Gerar QR]
+    
+    %% Ações do Dashboard
+    BB --> CC[Gerar QR Code]
+    BB --> DD[Ver Histórico]
+    BB --> EE[Resgatar Recompensa]
+    BB --> FF[Perfil/Configurações]
+    
+    %% Fluxo QR Code
+    CC --> GG[Tela QR Code]
+    GG --> HH[Mostrar QR grande<br/>Timer de expiração<br/>Instruções para uso]
+    HH --> II{QR foi escaneado?}
+    II -->|Sim| JJ[✅ Stamp adicionado!<br/>Mostrar animação]
+    JJ --> KK{Atingiu 10 stamps?}
+    KK -->|Sim| LL[🎉 Parabéns!<br/>Gyoza grátis disponível!]
+    LL --> MM[Ir para Dashboard<br/>Stamp counter: 0/10<br/>+1 Gyoza disponível]
+    KK -->|Não| NN[Voltar ao Dashboard<br/>Contador atualizado]
+    II -->|Expirou| OO[QR Code expirado<br/>Gerar novo?]
+    OO --> CC
+    
+    %% Histórico de Stamps
+    DD --> PP[Tela Histórico]
+    PP --> QQ[Lista de stamps:<br/>• Data/hora<br/>• Local<br/>• Status]
+    QQ --> RR[Voltar ao Dashboard]
+    RR --> I
+    
+    %% Resgate de Recompensa
+    EE --> SS{Tem gyoza disponível?}
+    SS -->|Não| TT[Nenhuma recompensa<br/>disponível ainda]
+    TT --> I
+    SS -->|Sim| UU[Tela de Recompensas]
+    UU --> VV[Mostrar gyozas disponíveis<br/>Botão: Resgatar]
+    VV --> WW[Confirmar resgate?]
+    WW --> XX{Confirmou?}
+    XX -->|Não| UU
+    XX -->|Sim| YY[Gyoza resgatada!<br/>Mostrar QR de resgate<br/>Levar ao caixa]
+    YY --> ZZ[Voltar ao Dashboard<br/>Gyoza removida da lista]
+    ZZ --> I
+    
+    %% Perfil/Configurações
+    FF --> AAA[Tela Perfil]
+    AAA --> BBB[Mostrar:<br/>• Nome, telefone<br/>• Alterar senha<br/>• Histórico de resgates<br/>• Logout]
+    BBB --> CCC[Alterar dados]
+    BBB --> DDD[Ver resgates anteriores]
+    BBB --> EEE[Sair da conta]
+    CCC --> FFF[Salvar alterações]
+    FFF --> AAA
+    DDD --> GGG[Lista de resgates<br/>com datas]
+    GGG --> AAA
+    EEE --> HHH[Logout confirmado]
+    HHH --> A
+    
+    %% Dashboard Manager
+    AA -->|Manager| III[Dashboard Manager]
+    III --> JJJ[Tela Scanner QR]
+    JJJ --> KKK[Câmera ativa<br/>Instrução: Aponte para QR do cliente]
+    KKK --> LLL{QR detectado?}
+    LLL -->|Não| MMM[Continuar escaneando]
+    MMM --> KKK
+    LLL -->|Sim| NNN{QR válido?}
+    NNN -->|Não| OOO[❌ QR inválido ou expirado<br/>Pedir novo QR]
+    OOO --> KKK
+    NNN -->|Sim| PPP[Mostrar dados do cliente:<br/>Nome, stamps atuais]
+    PPP --> QQQ[Confirmar adição<br/>de stamp?]
+    QQQ --> RRR{Confirmou?}
+    RRR -->|Não| KKK
+    RRR -->|Sim| SSS[✅ Stamp adicionado!<br/>Cliente: X/10 stamps]
+    SSS --> TTT{Cliente completou 10?}
+    TTT -->|Sim| UUU[🎉 Cliente ganhou gyoza!<br/>Avisar cliente]
+    TTT -->|Não| VVV[Stamp registrado<br/>Continuar]
+    UUU --> VVV
+    VVV --> KKK
+    
+    %% Logout Manager
+    III --> WWW[Sair da conta]
+    WWW --> A
+    
+    %% Estados de erro/offline
+    subgraph Tratamento de Erros
+        XXX[Sem internet]
+        YYY[Erro no servidor]
+        ZZZ[QR corrompido]
+        AAAA[Timeout]
+    end
+    
+    %% Notificações Push
+    subgraph Notificações
+        BBBB[Stamp adicionado]
+        CCCC[Gyoza disponível]
+        DDDD[Recompensa expirando]
+        EEEE[Promoção especial]
+    end
+    
+    %% Styling
+    classDef clientFlow fill:#e1f5fe
+    classDef managerFlow fill:#f3e5f5
+    classDef successState fill:#e8f5e8
+    classDef errorState fill:#ffebee
+    classDef decisionState fill:#fff3e0
+    
+    class I,BB,CC,DD,EE,FF,GG,HH clientFlow
+    class III,JJJ,KKK,PPP,QQQ managerFlow
+    class JJ,LL,MM,YY,SSS,UUU successState
+    class F,N,U,OO,TT,OOO errorState
+    class B,E,G,M,T,AA,II,KK,SS,XX,LLL,NNN,RRR,TTT decisionState

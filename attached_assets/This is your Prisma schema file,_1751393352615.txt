@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum para tipos de usuário
+enum UserType {
+  CUSTOMER
+  MANAGER
+  ADMIN
+}
+
+// Enum para status de QR Code
+enum QRCodeStatus {
+  ACTIVE
+  EXPIRED
+  USED
+}
+
+// Enum para status de stamp
+enum StampStatus {
+  ACTIVE
+  REDEEMED
+  EXPIRED
+}
+
+// Enum para tipos de recompensa
+enum RewardType {
+  GYOZA_FREE
+  DISCOUNT_10
+  DISCOUNT_15
+  SPECIAL_ITEM
+}
+
+// Enum para status de recompensa
+enum RewardStatus {
+  AVAILABLE
+  REDEEMED
+  EXPIRED
+}
+
+// Modelo para usuários (clientes e managers)
+model User {
+  id          String   @id @default(cuid())
+  phone       String   @unique
+  password    String
+  name        String?
+  userType    UserType @default(CUSTOMER)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
+
+  // Relacionamentos para clientes
+  stamps        Stamp[]
+  qrCodes       QRCode[]
+  rewards       Reward[]
+  redemptions   Redemption[]
+
+  // Relacionamentos para managers
+  stampsCreated Stamp[] @relation("StampCreatedBy")
+  redemptionsProcessed Redemption[] @relation("RedemptionProcessedBy")
+
+  @@map("users")
+}
+
+// Modelo para QR Codes gerados pelos clientes
+model QRCode {
+  id         String      @id @default(cuid())
+  code       String      @unique
+  userId     String
+  status     QRCodeStatus @default(ACTIVE)
+  expiresAt  DateTime
+  createdAt  DateTime    @default(now())
+  usedAt     DateTime?
+
+  // Relacionamentos
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stamp      Stamp?
+
+  @@map("qr_codes")
+}
+
+// Modelo para stamps acumulados pelos clientes
+model Stamp {
+  id         String      @id @default(cuid())
+  userId     String
+  qrCodeId   String?     @unique
+  createdById String     // Manager que adicionou o stamp
+  status     StampStatus @default(ACTIVE)
+  createdAt  DateTime    @default(now())
+  redeemedAt DateTime?
+
+  // Relacionamentos
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qrCode     QRCode?     @relation(fields: [qrCodeId], references: [id])
+  createdBy  User        @relation("StampCreatedBy", fields: [createdById], references: [id])
+  redemption Redemption?
+
+  @@map("stamps")
+}
+
+// Modelo para recompensas disponíveis para clientes
+model Reward {
+  id          String       @id @default(cuid())
+  userId      String
+  rewardType  RewardType
+  status      RewardStatus @default(AVAILABLE)
+  stampsUsed  Int          @default(10) // Quantidade de stamps necessários
+  createdAt   DateTime     @default(now())
+  expiresAt   DateTime?    // Data de expiração da recompensa
+
+  // Relacionamentos
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  redemption  Redemption?
+
+  @@map("rewards")
+}
+
+// Modelo para resgates de recompensas
+model Redemption {
+  id            String   @id @default(cuid())
+  userId        String
+  rewardId      String   @unique
+  processedById String   // Manager que processou o resgate
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  // Relacionamentos
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reward        Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  processedBy   User     @relation("RedemptionProcessedBy", fields: [processedById], references: [id])
+  stamps        Stamp[]  // Stamps utilizados neste resgate
+
+  @@map("redemptions")
+}
+
+// Modelo para configurações do sistema
+model SystemConfig {
+  id                    String  @id @default(cuid())
+  stampsForReward       Int     @default(10)
+  qrCodeExpirationMinutes Int   @default(60)
+  rewardExpirationDays  Int     @default(30)
+  isMaintenanceMode     Boolean @default(false)
+  updatedAt             DateTime @updatedAt
+
+  @@map("system_config")
+}
+
+// Modelo para auditoria/logs
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String   // Ex: "STAMP_ADDED", "REWARD_REDEEMED", "QR_GENERATED"
+  details   Json?    // Detalhes adicionais em JSON
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// Modelo para lojas/locais (para futuras expansões)
+model Store {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stores")
+}
+
+// Índices para performance
+// Índices automáticos já criados para chaves primárias e únicas
+
+// Índices adicionais para consultas frequentes
+// @@index([userId, createdAt]) nos modelos relevantes
+// @@index([status]) onde aplicável

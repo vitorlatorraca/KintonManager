@@ -118,3 +118,4 @@ Preferred communication style: Simple, everyday language.
 
 Changelog:
 - July 01, 2025. Initial setup
+- July 01, 2025. Fixed authentication issue in API requests - added Bearer token headers to queryClient.ts

@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  CUSTOMER
+  MANAGER
+  ADMIN
+}
+
+enum QRCodeStatus {
+  ACTIVE
+  EXPIRED
+  USED
+}
+
+enum StampStatus {
+  ACTIVE
+  REDEEMED
+  EXPIRED
+}
+
+enum RewardType {
+  GYOZA_FREE
+  DISCOUNT_10
+  DISCOUNT_15
+  SPECIAL_ITEM
+}
+
+enum RewardStatus {
+  AVAILABLE
+  REDEEMED
+  EXPIRED
+}
+
+model User {
+  id                    String       @id @default(cuid())
+  phone                 String       @unique
+  password              String
+  name                  String?
+  userType              UserType     @default(CUSTOMER)
+  isActive              Boolean      @default(true)
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  lastLoginAt           DateTime?
+
+  stamps                Stamp[]
+  qrCodes               QRCode[]
+  rewards               Reward[]
+  redemptions           Redemption[]
+
+  stampsCreated         Stamp[]      @relation("StampCreatedBy")
+  redemptionsProcessed  Redemption[] @relation("RedemptionProcessedBy")
+
+  @@map("users")
+}
+
+model QRCode {
+  id         String       @id @default(cuid())
+  code       String       @unique
+  userId     String
+  status     QRCodeStatus @default(ACTIVE)
+  expiresAt  DateTime
+  createdAt  DateTime     @default(now())
+  usedAt     DateTime?
+
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stamp      Stamp?
+
+  @@map("qr_codes")
+}
+
+model Stamp {
+  id            String      @id @default(cuid())
+  userId        String
+  qrCodeId      String?     @unique
+  createdById   String
+  redemptionId  String?     // 🔹 Adicionado para manter o campo redemption funcional
+  status        StampStatus @default(ACTIVE)
+  createdAt     DateTime    @default(now())
+  redeemedAt    DateTime?
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qrCode        QRCode?     @relation(fields: [qrCodeId], references: [id])
+  createdBy     User        @relation("StampCreatedBy", fields: [createdById], references: [id])
+  redemption    Redemption? @relation(fields: [redemptionId], references: [id]) // Correção mínima
+
+  @@map("stamps")
+}
+
+model Reward {
+  id          String       @id @default(cuid())
+  userId      String
+  rewardType  RewardType
+  status      RewardStatus @default(AVAILABLE)
+  stampsUsed  Int          @default(10)
+  createdAt   DateTime     @default(now())
+  expiresAt   DateTime?
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  redemption  Redemption?
+
+  @@map("rewards")
+}
+
+model Redemption {
+  id            String   @id @default(cuid())
+  userId        String
+  rewardId      String   @unique
+  processedById String
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reward        Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  processedBy   User     @relation("RedemptionProcessedBy", fields: [processedById], references: [id])
+  stamps        Stamp[]
+
+  @@map("redemptions")
+}
+
+model SystemConfig {
+  id                      String  @id @default(cuid())
+  stampsForReward         Int     @default(10)
+  qrCodeExpirationMinutes Int     @default(60)
+  rewardExpirationDays    Int     @default(30)
+  isMaintenanceMode       Boolean @default(false)
+  updatedAt               DateTime @updatedAt
+
+  @@map("system_config")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model Store {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stores")
+}

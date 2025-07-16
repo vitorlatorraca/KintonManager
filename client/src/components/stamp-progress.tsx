@@ -4,38 +4,41 @@ interface StampProgressProps {
 }
 
 export default function StampProgress({ current, total }: StampProgressProps) {
-  const percentage = Math.min((current / total) * 100, 100);
-  const circumference = 327; // 2 * π * 52
-  const strokeDashoffset = circumference - (circumference * percentage) / 100;
+  const stamps = Array.from({ length: total }, (_, i) => i < current);
 
   return (
-    <div className="relative">
-      <svg className="progress-ring w-16 h-16" viewBox="0 0 120 120">
-        <circle
-          className="progress-ring-circle"
-          stroke="rgba(255,255,255,0.3)"
-          strokeWidth="8"
-          fill="transparent"
-          r="52"
-          cx="60"
-          cy="60"
-        />
-        <circle
-          className="progress-ring-circle"
-          stroke="white"
-          strokeWidth="8"
-          fill="transparent"
-          r="52"
-          cx="60"
-          cy="60"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-bold text-white">{current}</span>
-        <span className="text-sm text-white">/{total}</span>
+    <div className="space-y-4">
+      <div className="text-center">
+        <h3 className="kinton-yellow text-2xl font-bold uppercase tracking-wider mb-2">
+          {current}/{total} CARIMBOS
+        </h3>
+        <div className="kinton-progress h-3 mb-4">
+          <div 
+            className="kinton-progress-bar h-full"
+            style={{ width: `${(current / total) * 100}%` }}
+          />
+        </div>
       </div>
+      
+      <div className="grid grid-cols-5 gap-3">
+        {stamps.map((filled, index) => (
+          <div
+            key={index}
+            className={`kinton-stamp ${filled ? '' : 'empty'} kinton-fade-in`}
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            {filled ? '★' : index + 1}
+          </div>
+        ))}
+      </div>
+      
+      {current === total && (
+        <div className="text-center mt-4">
+          <span className="kinton-reward-badge kinton-glow">
+            GYOZA GRÁTIS DISPONÍVEL!
+          </span>
+        </div>
+      )}
     </div>
   );
 }

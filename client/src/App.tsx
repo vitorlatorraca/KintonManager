@@ -37,7 +37,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
-          <div className="max-w-md mx-auto bg-white min-h-screen shadow-lg">
+          <div className="max-w-md mx-auto kinton-bg min-h-screen shadow-2xl kinton-fade-in">
             <Toaster />
             <Router />
           </div>

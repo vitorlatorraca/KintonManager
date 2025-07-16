@@ -3,57 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(222.2, 84%, 4.9%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(222.2, 84%, 4.9%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(222.2, 84%, 4.9%);
-  --primary: hsl(20, 100%, 59%);
-  --primary-foreground: hsl(210, 40%, 98%);
-  --secondary: hsl(210, 40%, 96%);
-  --secondary-foreground: hsl(222.2, 84%, 4.9%);
-  --muted: hsl(210, 40%, 96%);
-  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
-  --accent: hsl(210, 40%, 96%);
-  --accent-foreground: hsl(222.2, 84%, 4.9%);
+  --background: hsl(0, 0%, 7%);
+  --foreground: hsl(51, 100%, 50%);
+  --card: hsl(0, 0%, 10%);
+  --card-foreground: hsl(51, 100%, 50%);
+  --popover: hsl(0, 0%, 10%);
+  --popover-foreground: hsl(51, 100%, 50%);
+  --primary: hsl(51, 100%, 50%);
+  --primary-foreground: hsl(0, 0%, 0%);
+  --secondary: hsl(0, 0%, 15%);
+  --secondary-foreground: hsl(51, 100%, 50%);
+  --muted: hsl(0, 0%, 20%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --accent: hsl(51, 100%, 50%);
+  --accent-foreground: hsl(0, 0%, 0%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(214.3, 31.8%, 91.4%);
-  --input: hsl(214.3, 31.8%, 91.4%);
-  --ring: hsl(20, 100%, 59%);
+  --border: hsl(0, 0%, 20%);
+  --input: hsl(0, 0%, 15%);
+  --ring: hsl(51, 100%, 50%);
   --radius: 0.75rem;
-  
-  /* Custom Japanese restaurant theme colors */
-  --kinton-primary: hsl(20, 100%, 59%);
-  --kinton-primary-dark: hsl(20, 85%, 50%);
-  --kinton-secondary: hsl(210, 22%, 20%);
-  --kinton-secondary-light: hsl(210, 15%, 30%);
-  --kinton-success: hsl(142, 76%, 36%);
-  --kinton-error: hsl(0, 84%, 60%);
-  --kinton-warning: hsl(45, 100%, 51%);
+
+  /* Kinton Brand Colors */
+  --kinton-yellow: hsl(51, 100%, 50%);
+  --kinton-yellow-bright: hsl(51, 100%, 60%);
+  --kinton-black: hsl(0, 0%, 0%);
+  --kinton-dark-gray: hsl(0, 0%, 10%);
+  --kinton-medium-gray: hsl(0, 0%, 20%);
 }
 
 .dark {
-  --background: hsl(222.2, 84%, 4.9%);
-  --foreground: hsl(210, 40%, 98%);
-  --card: hsl(222.2, 84%, 4.9%);
-  --card-foreground: hsl(210, 40%, 98%);
-  --popover: hsl(222.2, 84%, 4.9%);
-  --popover-foreground: hsl(210, 40%, 98%);
-  --primary: hsl(20, 100%, 59%);
-  --primary-foreground: hsl(222.2, 84%, 4.9%);
-  --secondary: hsl(217.2, 32.6%, 17.5%);
-  --secondary-foreground: hsl(210, 40%, 98%);
-  --muted: hsl(217.2, 32.6%, 17.5%);
-  --muted-foreground: hsl(215, 20.2%, 65.1%);
-  --accent: hsl(217.2, 32.6%, 17.5%);
-  --accent-foreground: hsl(210, 40%, 98%);
+  --background: hsl(0, 0%, 7%);
+  --foreground: hsl(51, 100%, 50%);
+  --card: hsl(0, 0%, 10%);
+  --card-foreground: hsl(51, 100%, 50%);
+  --popover: hsl(0, 0%, 10%);
+  --popover-foreground: hsl(51, 100%, 50%);
+  --primary: hsl(51, 100%, 50%);
+  --primary-foreground: hsl(0, 0%, 0%);
+  --secondary: hsl(0, 0%, 15%);
+  --secondary-foreground: hsl(51, 100%, 50%);
+  --muted: hsl(0, 0%, 20%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --accent: hsl(51, 100%, 50%);
+  --accent-foreground: hsl(0, 0%, 0%);
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(217.2, 32.6%, 17.5%);
-  --input: hsl(217.2, 32.6%, 17.5%);
-  --ring: hsl(20, 100%, 59%);
+  --border: hsl(0, 0%, 20%);
+  --input: hsl(0, 0%, 15%);
+  --ring: hsl(51, 100%, 50%);
 }
 
 @layer base {
@@ -62,28 +60,170 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: "Inter", sans-serif;
+    @apply bg-background text-foreground font-bold;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 }
 
 @layer components {
-  .kinton-primary {
-    background-color: var(--kinton-primary);
-    color: white;
+  .kinton-yellow {
+    color: #ffd700;
   }
-  
-  .kinton-primary:hover {
-    background-color: var(--kinton-primary-dark);
+
+  .kinton-bg {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
   }
-  
-  .kinton-secondary {
-    background-color: var(--kinton-secondary);
-    color: white;
+
+  .kinton-card {
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
   }
-  
-  .kinton-secondary:hover {
-    background-color: var(--kinton-secondary-light);
+
+  .kinton-button {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  }
+
+  .kinton-button:hover {
+    background: linear-gradient(45deg, #ffa500, #ffd700);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  }
+
+  .kinton-button:active {
+    transform: translateY(0);
+  }
+
+  .kinton-text-shadow {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  .kinton-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #ffd700;
+  }
+
+  .kinton-tab {
+    background: transparent;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    color: #ffd700;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+  }
+
+  .kinton-tab.active {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    color: #000;
+    border-color: #ffd700;
+  }
+
+  .kinton-tab:hover {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+  }
+
+  .kinton-input {
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #ffd700;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 500;
+  }
+
+  .kinton-input:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    outline: none;
+  }
+
+  .kinton-input::placeholder {
+    color: rgba(255, 215, 0, 0.6);
+  }
+
+  .kinton-stamp {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  }
+
+  .kinton-stamp.empty {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px dashed rgba(255, 215, 0, 0.3);
+    color: rgba(255, 215, 0, 0.5);
+  }
+
+  .kinton-progress {
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .kinton-progress-bar {
+    background: linear-gradient(90deg, #ffd700, #ffa500);
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 12px;
+  }
+
+  .kinton-qr-container {
+    background: #ffd700;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+  }
+
+  .kinton-reward-badge {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
   }
 }
 
@@ -91,40 +231,94 @@
   .progress-ring {
     transform: rotate(-90deg);
   }
-  
+
   .progress-ring-circle {
     transition: stroke-dashoffset 0.35s;
     transform-origin: 50% 50%;
   }
-  
+
   .qr-scanner-overlay {
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 107, 53, 0.1) 30%, rgba(255, 107, 53, 0.1) 70%, transparent 70%);
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(255, 215, 0, 0.1) 30%,
+      rgba(255, 215, 0, 0.1) 70%,
+      transparent 70%
+    );
     background-size: 30px 30px;
     animation: scanner-move 2s linear infinite;
   }
-  
+
   @keyframes scanner-move {
-    0% { background-position: 0 0; }
-    100% { background-position: 30px 30px; }
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 30px 30px;
+    }
   }
-  
+
   .stamp-bounce {
     animation: stamp-bounce 0.6s ease-in-out;
   }
-  
+
   @keyframes stamp-bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-30px); }
-    60% { transform: translateY(-15px); }
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-30px);
+    }
+    60% {
+      transform: translateY(-15px);
+    }
   }
-  
+
   .reward-celebration {
     animation: celebration 1s ease-in-out;
   }
-  
+
   @keyframes celebration {
-    0% { transform: scale(0) rotate(0deg); }
-    50% { transform: scale(1.2) rotate(180deg); }
-    100% { transform: scale(1) rotate(360deg); }
+    0% {
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+    }
+    100% {
+      transform: scale(1) rotate(360deg);
+    }
+  }
+
+  .kinton-glow {
+    animation: kinton-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes kinton-glow {
+    from {
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+  }
+
+  .kinton-fade-in {
+    animation: kinton-fade-in 0.5s ease-out;
+  }
+
+  @keyframes kinton-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

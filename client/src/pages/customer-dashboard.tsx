@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import StampProgress from "@/components/stamp-progress";
 import TabNavigation from "@/components/tab-navigation";
+import KintonLogo from "@/components/kinton-logo";
 
 export default function CustomerDashboard() {
   const { user, token, logout } = useAuth();
@@ -78,69 +79,64 @@ export default function CustomerDashboard() {
   return (
     <>
       <TabNavigation />
-      <div className="p-6">
+      <div className="p-6 space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-[#2C3E50]">
-              Welcome, {user?.name || 'Customer'}!
+            <h2 className="text-2xl font-bold kinton-yellow kinton-text-shadow">
+              OLÁ, {user?.name?.toUpperCase() || 'CLIENTE'}!
             </h2>
-            <p className="text-gray-600">Your stamp collection</p>
+            <p className="text-[#FFD700]/80 font-medium">Sua coleção de carimbos</p>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full bg-gray-100 hover:bg-gray-200"
+            className="kinton-button rounded-full"
             onClick={() => setLocation('/profile')}
           >
-            <User className="h-5 w-5 text-gray-600" />
+            <User className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Stamp Progress Card */}
-        <Card className="bg-gradient-to-r from-[#FF6B35] to-orange-500 text-white mb-6">
+        <Card className="kinton-card">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold mb-1">Stamp Progress</h3>
-                <p className="text-orange-100">Collect 10 stamps for free gyoza!</p>
-              </div>
-              <StampProgress current={stamps.current} total={stamps.required} />
-            </div>
+            <StampProgress current={stamps.current} total={stamps.required} />
           </CardContent>
         </Card>
 
         {/* Available Rewards */}
         {rewards && rewards.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-[#2C3E50] mb-3">Available Rewards</h3>
-            <div className="space-y-3">
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold kinton-yellow kinton-text-shadow uppercase tracking-wide">
+              RECOMPENSAS DISPONÍVEIS
+            </h3>
+            <div className="space-y-4">
               {rewards.map((reward: any) => (
-                <Card key={reward.id} className="bg-green-50 border-green-200">
-                  <CardContent className="p-4">
+                <Card key={reward.id} className="kinton-card border-2 border-[#FFD700]/50">
+                  <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 bg-[#28A745] rounded-full flex items-center justify-center mr-3">
-                          <Gift className="h-6 w-6 text-white" />
+                        <div className="w-16 h-16 kinton-stamp mr-4 text-2xl">
+                          🥟
                         </div>
                         <div>
-                          <h4 className="font-medium text-[#2C3E50]">
-                            {reward.type === 'GYOZA_FREE' ? 'Free Gyoza' : reward.type}
+                          <h4 className="font-bold kinton-yellow text-lg uppercase tracking-wide">
+                            {reward.type === 'GYOZA_FREE' ? 'GYOZA GRÁTIS' : reward.type}
                           </h4>
-                          <p className="text-sm text-gray-600">Ready to redeem!</p>
+                          <p className="text-[#FFD700]/80 font-medium">Pronto para resgatar!</p>
                         </div>
                       </div>
                       <Button
-                        className="bg-[#28A745] hover:bg-green-600 text-white"
+                        className="kinton-button text-lg px-6 py-3"
                         onClick={() => {
-                          // Handle reward redemption
                           toast({
-                            title: "Reward redeemed!",
-                            description: "Show this to staff to claim your free gyoza.",
+                            title: "Recompensa resgatada!",
+                            description: "Mostre isso ao staff para receber seu gyoza grátis.",
                           });
                         }}
                       >
-                        Redeem
+                        RESGATAR
                       </Button>
                     </div>
                   </CardContent>
@@ -151,31 +147,31 @@ export default function CustomerDashboard() {
         )}
 
         {/* Action Buttons */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <Button
-            className="w-full bg-[#FF6B35] hover:bg-[#E55A2E] text-white py-4 text-lg"
+            className="w-full kinton-button py-6 text-xl"
             onClick={() => setLocation('/qr-code')}
           >
-            <QrCode className="mr-3 h-5 w-5" />
-            Generate QR Code
+            <QrCode className="mr-3 h-6 w-6" />
+            GERAR QR CODE
           </Button>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <Button
               variant="outline"
-              className="py-3"
+              className="kinton-tab py-4 text-base"
               onClick={() => setLocation('/history')}
             >
-              <History className="mr-2 h-4 w-4" />
-              History
+              <History className="mr-2 h-5 w-5" />
+              HISTÓRICO
             </Button>
             <Button
               variant="outline"
-              className="py-3"
+              className="kinton-tab py-4 text-base"
               onClick={() => setLocation('/profile')}
             >
-              <Settings className="mr-2 h-4 w-4" />
-              Profile
+              <Settings className="mr-2 h-5 w-5" />
+              PERFIL
             </Button>
           </div>
         </div>

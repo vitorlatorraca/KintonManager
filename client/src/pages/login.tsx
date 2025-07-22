@@ -37,7 +37,7 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
-      const response = await apiRequest('POST', '/api/auth/login', data);
+      const response = await apiRequest("POST", "/api/auth/login", data);
       return response.json();
     },
     onSuccess: (data) => {
@@ -50,7 +50,8 @@ export default function Login() {
     onError: (error: any) => {
       toast({
         title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        description:
+          error.message || "Please check your credentials and try again.",
         variant: "destructive",
       });
     },
@@ -75,7 +76,10 @@ export default function Login() {
           <CardContent className="pt-6">
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <Label htmlFor="phone" className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide">
+                <Label
+                  htmlFor="phone"
+                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                >
                   Número de Telefone
                 </Label>
                 <Input
@@ -86,12 +90,17 @@ export default function Login() {
                   className="kinton-input w-full"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">{form.formState.errors.phone.message}</p>
+                  <p className="text-red-400 text-sm mt-2 font-medium">
+                    {form.formState.errors.phone.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="password" className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                >
                   Senha
                 </Label>
                 <div className="relative">
@@ -107,11 +116,17 @@ export default function Login() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 kinton-yellow hover:text-[#FFA500] transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
                 {form.formState.errors.password && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">{form.formState.errors.password.message}</p>
+                  <p className="text-red-400 text-sm mt-2 font-medium">
+                    {form.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 
@@ -127,7 +142,10 @@ export default function Login() {
             <div className="mt-8 text-center">
               <div className="border-t border-[#FFD700]/20 pt-6">
                 <Link href="/register">
-                  <Button variant="link" className="kinton-yellow hover:text-[#FFA500] p-0 text-base font-bold uppercase tracking-wide">
+                  <Button
+                    variant="link"
+                    className="kinton-yellow hover:text-[#FFA500] p-0 text-base font-bold uppercase tracking-wide"
+                  >
                     Não tem conta? <span className="ml-2">CADASTRE-SE</span>
                   </Button>
                 </Link>

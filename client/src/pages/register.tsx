@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "wouter";
 import { useMutation } from "@tanstack/react-query";
-import { Utensils, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import TabNavigation from "@/components/tab-navigation";
+import KintonLogo from "@/components/kinton-logo";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -73,29 +74,28 @@ export default function Register() {
       <TabNavigation />
       <div className="p-6">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-[#FF6B35] rounded-full mx-auto mb-4 flex items-center justify-center">
-            <Utensils className="text-white text-2xl" />
-          </div>
-          <h1 className="text-2xl font-bold text-[#2C3E50] mb-2">Join Kinton Ramen</h1>
-          <p className="text-gray-600">Create an account to start collecting stamps!</p>
+          <KintonLogo size="lg" className="mb-6" />
+          <p className="kinton-yellow text-lg font-bold">
+            JUNTE-SE AO KINTON RAMEN!
+          </p>
         </div>
 
-        <Card>
+        <Card className="kinton-card">
           <CardContent className="pt-6">
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <Label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
+                <Label htmlFor="name" className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide">
+                  Nome Completo
                 </Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder="Digite seu nome completo"
                   {...form.register("name")}
-                  className="w-full"
+                  className="kinton-input w-full"
                 />
                 {form.formState.errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</p>
+                  <p className="text-red-400 text-sm mt-2 font-medium">{form.formState.errors.name.message}</p>
                 )}
               </div>
 

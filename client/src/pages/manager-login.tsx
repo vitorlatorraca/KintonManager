@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { Bus, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import TabNavigation from "@/components/tab-navigation";
+import KintonLogo from "@/components/kinton-logo";
 
 const managerLoginSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 characters"),
@@ -35,11 +36,11 @@ export default function ManagerLogin() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: ManagerLoginFormData) => {
-      const response = await apiRequest('POST', '/api/auth/login', data);
+      const response = await apiRequest("POST", "/api/auth/login", data);
       return response.json();
     },
     onSuccess: (data) => {
-      if (data.user.userType !== 'MANAGER' && data.user.userType !== 'ADMIN') {
+      if (data.user.userType !== "MANAGER" && data.user.userType !== "ADMIN") {
         toast({
           title: "Access denied",
           description: "This account does not have manager privileges.",
@@ -47,7 +48,7 @@ export default function ManagerLogin() {
         });
         return;
       }
-      
+
       login(data.user, data.token);
       toast({
         title: "Welcome to Manager Portal!",
@@ -57,7 +58,8 @@ export default function ManagerLogin() {
     onError: (error: any) => {
       toast({
         title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        description:
+          error.message || "Please check your credentials and try again.",
         variant: "destructive",
       });
     },
@@ -72,34 +74,39 @@ export default function ManagerLogin() {
       <TabNavigation />
       <div className="p-6">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-[#2C3E50] rounded-full mx-auto mb-4 flex items-center justify-center">
-            <Bus className="text-white text-2xl" />
-          </div>
-          <h1 className="text-2xl font-bold text-[#2C3E50] mb-2">Manager Portal</h1>
-          <p className="text-gray-600">Staff access for Kinton Ramen</p>
+          <KintonLogo size="lg" className="mb-6" />
+          <p className="kinton-yellow text-lg font-bold">PORTAL DO GERENTE</p>
         </div>
 
-        <Card>
+        <Card className="kinton-card">
           <CardContent className="pt-6">
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <Label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                  Staff Phone
+                <Label
+                  htmlFor="phone"
+                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                >
+                  Telefone do Staff
                 </Label>
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="Enter staff phone number"
+                  placeholder="Digite o telefone do staff"
                   {...form.register("phone")}
-                  className="w-full"
+                  className="kinton-input w-full"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.phone.message}</p>
+                  <p className="text-red-400 text-sm mt-2 font-medium">
+                    {form.formState.errors.phone.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -115,11 +122,17 @@ export default function ManagerLogin() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {form.formState.errors.password && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {form.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 

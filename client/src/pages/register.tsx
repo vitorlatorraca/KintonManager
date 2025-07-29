@@ -15,15 +15,17 @@ import { apiRequest } from "@/lib/queryClient";
 import TabNavigation from "@/components/tab-navigation";
 import KintonLogo from "@/components/kinton-logo";
 
-const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(10, "Phone number must be at least 10 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    phone: z.string().min(10, "Phone number must be at least 10 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -44,8 +46,8 @@ export default function Register() {
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (data: Omit<RegisterFormData, 'confirmPassword'>) => {
-      const response = await apiRequest('POST', '/api/auth/register', data);
+    mutationFn: async (data: Omit<RegisterFormData, "confirmPassword">) => {
+      const response = await apiRequest("POST", "/api/auth/register", data);
       return response.json();
     },
     onSuccess: (data) => {
@@ -58,7 +60,8 @@ export default function Register() {
     onError: (error: any) => {
       toast({
         title: "Registration failed",
-        description: error.message || "Please check your information and try again.",
+        description:
+          error.message || "Please check your information and try again.",
         variant: "destructive",
       });
     },
@@ -84,7 +87,10 @@ export default function Register() {
           <CardContent className="pt-6">
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <Label htmlFor="name" className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide">
+                <Label
+                  htmlFor="name"
+                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                >
                   Nome Completo
                 </Label>
                 <Input
@@ -95,12 +101,17 @@ export default function Register() {
                   className="kinton-input w-full"
                 />
                 {form.formState.errors.name && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">{form.formState.errors.name.message}</p>
+                  <p className="text-red-400 text-sm mt-2 font-medium">
+                    {form.formState.errors.name.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Phone Number
                 </Label>
                 <Input
@@ -111,12 +122,17 @@ export default function Register() {
                   className="w-full"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.phone.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {form.formState.errors.phone.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -132,16 +148,25 @@ export default function Register() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {form.formState.errors.password && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {form.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -157,11 +182,17 @@ export default function Register() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {form.formState.errors.confirmPassword && (
-                  <p className="text-red-500 text-sm mt-1">{form.formState.errors.confirmPassword.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {form.formState.errors.confirmPassword.message}
+                  </p>
                 )}
               </div>
 
@@ -170,14 +201,20 @@ export default function Register() {
                 className="w-full bg-[#FF6B35] hover:bg-[#E55A2E] text-white py-3"
                 disabled={registerMutation.isPending}
               >
-                {registerMutation.isPending ? "Creating account..." : "Create Account"}
+                {registerMutation.isPending
+                  ? "Creating account..."
+                  : "Create Account"}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
               <Link href="/">
-                <Button variant="link" className="text-[#2C3E50] hover:underline p-0">
-                  Already have an account? <span className="font-medium ml-1">Sign In</span>
+                <Button
+                  variant="link"
+                  className="text-[#2C3E50] hover:underline p-0"
+                >
+                  Already have an account?{" "}
+                  <span className="font-medium ml-1">Sign In</span>
                 </Button>
               </Link>
             </div>

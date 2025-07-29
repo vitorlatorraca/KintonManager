@@ -16,16 +16,20 @@ export default function CustomerDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const { data: dashboardData, isLoading, error } = useQuery({
-    queryKey: ['/api/user/dashboard'],
+  const {
+    data: dashboardData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["/api/user/dashboard"],
     queryFn: async () => {
-      const response = await fetch('/api/user/dashboard', {
+      const response = await fetch("/api/user/dashboard", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch dashboard data');
+        throw new Error("Failed to fetch dashboard data");
       }
       return response.json();
     },
@@ -34,12 +38,12 @@ export default function CustomerDashboard() {
 
   useEffect(() => {
     if (!user || !token) {
-      setLocation('/');
+      setLocation("/");
       return;
     }
 
-    if (user.userType !== 'CUSTOMER') {
-      setLocation('/manager');
+    if (user.userType !== "CUSTOMER") {
+      setLocation("/manager");
       return;
     }
   }, [user, token, setLocation]);
@@ -84,15 +88,17 @@ export default function CustomerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold kinton-yellow kinton-text-shadow">
-              OLÁ, {user?.name?.toUpperCase() || 'CLIENTE'}!
+              OLÁ, {user?.name?.toUpperCase() || "CLIENTE"}!
             </h2>
-            <p className="text-[#FFD700]/80 font-medium">Sua coleção de carimbos</p>
+            <p className="text-[#FFD700]/80 font-medium">
+              Sua coleção de carimbos
+            </p>
           </div>
           <Button
             variant="ghost"
             size="icon"
             className="kinton-button rounded-full"
-            onClick={() => setLocation('/profile')}
+            onClick={() => setLocation("/profile")}
           >
             <User className="h-5 w-5" />
           </Button>
@@ -113,7 +119,10 @@ export default function CustomerDashboard() {
             </h3>
             <div className="space-y-4">
               {rewards.map((reward: any) => (
-                <Card key={reward.id} className="kinton-card border-2 border-[#FFD700]/50">
+                <Card
+                  key={reward.id}
+                  className="kinton-card border-2 border-[#FFD700]/50"
+                >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -122,9 +131,13 @@ export default function CustomerDashboard() {
                         </div>
                         <div>
                           <h4 className="font-bold kinton-yellow text-lg uppercase tracking-wide">
-                            {reward.type === 'GYOZA_FREE' ? 'GYOZA GRÁTIS' : reward.type}
+                            {reward.type === "GYOZA_FREE"
+                              ? "GYOZA GRÁTIS"
+                              : reward.type}
                           </h4>
-                          <p className="text-[#FFD700]/80 font-medium">Pronto para resgatar!</p>
+                          <p className="text-[#FFD700]/80 font-medium">
+                            Pronto para resgatar!
+                          </p>
                         </div>
                       </div>
                       <Button
@@ -132,7 +145,8 @@ export default function CustomerDashboard() {
                         onClick={() => {
                           toast({
                             title: "Recompensa resgatada!",
-                            description: "Mostre isso ao staff para receber seu gyoza grátis.",
+                            description:
+                              "Mostre isso ao staff para receber seu gyoza grátis.",
                           });
                         }}
                       >
@@ -150,7 +164,7 @@ export default function CustomerDashboard() {
         <div className="space-y-4">
           <Button
             className="w-full kinton-button py-6 text-xl"
-            onClick={() => setLocation('/qr-code')}
+            onClick={() => setLocation("/qr-code")}
           >
             <QrCode className="mr-3 h-6 w-6" />
             GERAR QR CODE
@@ -160,7 +174,7 @@ export default function CustomerDashboard() {
             <Button
               variant="outline"
               className="kinton-tab py-4 text-base"
-              onClick={() => setLocation('/history')}
+              onClick={() => setLocation("/history")}
             >
               <History className="mr-2 h-5 w-5" />
               HISTÓRICO
@@ -168,7 +182,7 @@ export default function CustomerDashboard() {
             <Button
               variant="outline"
               className="kinton-tab py-4 text-base"
-              onClick={() => setLocation('/profile')}
+              onClick={() => setLocation("/profile")}
             >
               <Settings className="mr-2 h-5 w-5" />
               PERFIL

@@ -88,10 +88,10 @@ export default function CustomerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold kinton-yellow kinton-text-shadow">
-              OLÁ, {user?.name?.toUpperCase() || "CLIENTE"}!
+              HELLO, {user?.name?.toUpperCase() || "CUSTOMER"}!
             </h2>
             <p className="text-[#FFD700]/80 font-medium">
-              Sua coleção de carimbos
+              Your stamp collection
             </p>
           </div>
           <Button
@@ -115,7 +115,7 @@ export default function CustomerDashboard() {
         {rewards && rewards.length > 0 && (
           <div className="space-y-4">
             <h3 className="text-xl font-bold kinton-yellow kinton-text-shadow uppercase tracking-wide">
-              RECOMPENSAS DISPONÍVEIS
+              AVAILABLE REWARDS
             </h3>
             <div className="space-y-4">
               {rewards.map((reward: any) => (
@@ -132,11 +132,11 @@ export default function CustomerDashboard() {
                         <div>
                           <h4 className="font-bold kinton-yellow text-lg uppercase tracking-wide">
                             {reward.type === "GYOZA_FREE"
-                              ? "GYOZA GRÁTIS"
+                              ? "FREE GYOZA"
                               : reward.type}
                           </h4>
                           <p className="text-[#FFD700]/80 font-medium">
-                            Pronto para resgatar!
+                            Ready to redeem!
                           </p>
                         </div>
                       </div>
@@ -144,13 +144,13 @@ export default function CustomerDashboard() {
                         className="kinton-button text-lg px-6 py-3"
                         onClick={() => {
                           toast({
-                            title: "Recompensa resgatada!",
+                            title: "Reward redeemed!",
                             description:
-                              "Mostre isso ao staff para receber seu gyoza grátis.",
+                              "Show this to staff to receive your free gyoza.",
                           });
                         }}
                       >
-                        RESGATAR
+                        REDEEM
                       </Button>
                     </div>
                   </CardContent>
@@ -167,7 +167,7 @@ export default function CustomerDashboard() {
             onClick={() => setLocation("/qr-code")}
           >
             <QrCode className="mr-3 h-6 w-6" />
-            GERAR QR CODE
+            GENERATE QR CODE
           </Button>
 
           <div className="grid grid-cols-2 gap-4">
@@ -177,7 +177,7 @@ export default function CustomerDashboard() {
               onClick={() => setLocation("/history")}
             >
               <History className="mr-2 h-5 w-5" />
-              HISTÓRICO
+              HISTORY
             </Button>
             <Button
               variant="outline"
@@ -185,7 +185,7 @@ export default function CustomerDashboard() {
               onClick={() => setLocation("/profile")}
             >
               <Settings className="mr-2 h-5 w-5" />
-              PERFIL
+              PROFILE
             </Button>
           </div>
         </div>

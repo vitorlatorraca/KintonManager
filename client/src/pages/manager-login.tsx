@@ -51,7 +51,7 @@ export default function ManagerLogin() {
 
       login(data.user, data.token);
       toast({
-        title: "Welcome to Manager Portal!",
+        title: "Welcome to the Manager Portal!",
         description: "You have successfully signed in.",
       });
     },
@@ -75,7 +75,7 @@ export default function ManagerLogin() {
       <div className="p-6">
         <div className="text-center mb-8">
           <KintonLogo size="lg" className="mb-6" />
-          <p className="kinton-yellow text-lg font-bold">PORTAL DO GERENTE</p>
+          <p className="kinton-yellow text-lg font-bold">MANAGER PORTAL</p>
         </div>
 
         <Card className="kinton-card">
@@ -86,12 +86,12 @@ export default function ManagerLogin() {
                   htmlFor="phone"
                   className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
                 >
-                  Telefone do Staff
+                  Staff Phone Number
                 </Label>
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="Digite o telefone do staff"
+                  placeholder="Enter staff phone number"
                   {...form.register("phone")}
                   className="kinton-input w-full"
                 />
@@ -141,7 +141,7 @@ export default function ManagerLogin() {
                 className="w-full bg-[#2C3E50] hover:bg-gray-700 text-white py-3"
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? "Signing in..." : "Staff Sign In"}
+                {loginMutation.isPending ? "Signing in..." : "Sign in as Staff"}
               </Button>
             </form>
           </CardContent>

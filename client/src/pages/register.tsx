@@ -79,7 +79,7 @@ export default function Register() {
         <div className="text-center mb-8">
           <KintonLogo size="lg" className="mb-6" />
           <p className="kinton-yellow text-lg font-bold">
-            JUNTE-SE AO KINTON RAMEN!
+            JOIN KINTON RAMEN!
           </p>
         </div>
 
@@ -91,12 +91,12 @@ export default function Register() {
                   htmlFor="name"
                   className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
                 >
-                  Nome Completo
+                  Full Name
                 </Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Digite seu nome completo"
+                  placeholder="Enter your full name"
                   {...form.register("name")}
                   className="kinton-input w-full"
                 />
@@ -179,7 +179,9 @@ export default function Register() {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showConfirmPassword ? (

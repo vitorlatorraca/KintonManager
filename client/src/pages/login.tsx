@@ -68,7 +68,7 @@ export default function Login() {
         <div className="text-center mb-8">
           <KintonLogo size="lg" className="mb-6" />
           <p className="kinton-yellow text-lg font-bold">
-            COLETE CARIMBOS, GANHE GYOZA GRÁTIS!
+            COLLECT STAMPS, EARN FREE GYOZA!
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function Login() {
                   htmlFor="phone"
                   className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
                 >
-                  Número de Telefone
+                  Phone Number
                 </Label>
                 <Input
                   id="phone"
@@ -101,13 +101,13 @@ export default function Login() {
                   htmlFor="password"
                   className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
                 >
-                  Senha
+                  Password
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Digite sua senha"
+                    placeholder="Enter your password"
                     {...form.register("password")}
                     className="kinton-input w-full pr-12"
                   />
@@ -135,7 +135,7 @@ export default function Login() {
                 className="w-full kinton-button py-4 text-lg"
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? "ENTRANDO..." : "ENTRAR"}
+                {loginMutation.isPending ? "SIGNING IN..." : "SIGN IN"}
               </Button>
             </form>
 
@@ -146,7 +146,7 @@ export default function Login() {
                     variant="link"
                     className="kinton-yellow hover:text-[#FFA500] p-0 text-base font-bold uppercase tracking-wide"
                   >
-                    Não tem conta? <span className="ml-2">CADASTRE-SE</span>
+                    Don't have an account? <span className="ml-2">REGISTER</span>
                   </Button>
                 </Link>
               </div>

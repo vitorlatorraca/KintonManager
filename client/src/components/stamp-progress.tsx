@@ -10,7 +10,7 @@ export default function StampProgress({ current, total }: StampProgressProps) {
     <div className="space-y-4">
       <div className="text-center">
         <h3 className="kinton-yellow text-2xl font-bold uppercase tracking-wider mb-2">
-          {current}/{total} CARIMBOS
+          {current}/{total} STAMPS
         </h3>
         <div className="kinton-progress h-3 mb-4">
           <div 
@@ -35,7 +35,7 @@ export default function StampProgress({ current, total }: StampProgressProps) {
       {current === total && (
         <div className="text-center mt-4">
           <span className="kinton-reward-badge kinton-glow">
-            GYOZA GRÁTIS DISPONÍVEL!
+            FREE GYOZA AVAILABLE!
           </span>
         </div>
       )}

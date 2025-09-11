@@ -16,7 +16,7 @@ export default function ManagerDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [manualQRCode, setManualQRCode] = useState('');
-  const [isScanning, setIsScanning] = useState(true);
+  const [isScanning, setIsScanning] = useState(true); 
 
   const validateQRMutation = useMutation({
     mutationFn: async (code: string) => {

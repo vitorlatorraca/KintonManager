@@ -78,7 +78,7 @@ export default function ManagerDashboard() {
     <>
       <TabNavigation />
       {/* Header */}
-      <div className="bg-[#2C3E50] text-white p-4">
+      <div className="bg-[#222d38] text-white p-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Staff Portal</h2>

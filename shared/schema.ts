@@ -101,7 +101,7 @@ export const stores = pgTable("stores", {
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   stamps: many(stamps),
-  qrCodes: many(qrCodes),
+  customerCodes: many(customerCodes),
   rewards: many(rewards),
   redemptions: many(redemptions),
   stampsCreated: many(stamps, { relationName: 'StampCreatedBy' }),

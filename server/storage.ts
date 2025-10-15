@@ -1,7 +1,7 @@
 import { 
-  users, stamps, qrCodes, rewards, redemptions, systemConfig, auditLogs,
+  users, stamps, customerCodes, rewards, redemptions, systemConfig, auditLogs,
   type User, type InsertUser, type Stamp, type InsertStamp, 
-  type QRCode, type InsertQRCode, type Reward, type InsertReward,
+  type CustomerCode, type InsertCustomerCode, type Reward, type InsertReward,
   type Redemption, type InsertRedemption, type SystemConfig, type AuditLog
 } from "@shared/schema";
 import { db } from "./db";
@@ -14,18 +14,18 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
 
-  // QR Codes
-  createQRCode(qrCodeData: InsertQRCode): Promise<QRCode>;
-  getQRCode(code: string): Promise<QRCode | undefined>;
-  getQRCodeById(id: string): Promise<QRCode | undefined>;
-  updateQRCode(id: string, updates: Partial<QRCode>): Promise<QRCode | undefined>;
-  getUserActiveQRCode(userId: string): Promise<QRCode | undefined>;
+  // Customer Codes
+  createCustomerCode(customerCodeData: InsertCustomerCode): Promise<CustomerCode>;
+  getCustomerCode(code: string): Promise<CustomerCode | undefined>;
+  getCustomerCodeById(id: string): Promise<CustomerCode | undefined>;
+  updateCustomerCode(id: string, updates: Partial<CustomerCode>): Promise<CustomerCode | undefined>;
+  getUserActiveCustomerCode(userId: string): Promise<CustomerCode | undefined>;
 
   // Stamps
   createStamp(stampData: InsertStamp): Promise<Stamp>;
   getUserStamps(userId: string): Promise<Stamp[]>;
   getUserActiveStampsCount(userId: string): Promise<number>;
-  getStampByQRCode(qrCodeId: string): Promise<Stamp | undefined>;
+  getStampByCustomerCode(customerCodeId: string): Promise<Stamp | undefined>;
 
   // Rewards
   createReward(rewardData: InsertReward): Promise<Reward>;
@@ -69,44 +69,44 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
-  async createQRCode(qrCodeData: InsertQRCode): Promise<QRCode> {
-    const [qrCode] = await db.insert(qrCodes).values(qrCodeData).returning();
-    return qrCode;
+  async createCustomerCode(customerCodeData: InsertCustomerCode): Promise<CustomerCode> {
+    const [customerCode] = await db.insert(customerCodes).values(customerCodeData).returning();
+    return customerCode;
   }
 
-  async getQRCode(code: string): Promise<QRCode | undefined> {
-    const [qrCode] = await db.select().from(qrCodes).where(eq(qrCodes.code, code));
-    return qrCode || undefined;
+  async getCustomerCode(code: string): Promise<CustomerCode | undefined> {
+    const [customerCode] = await db.select().from(customerCodes).where(eq(customerCodes.code, code));
+    return customerCode || undefined;
   }
 
-  async getQRCodeById(id: string): Promise<QRCode | undefined> {
-    const [qrCode] = await db.select().from(qrCodes).where(eq(qrCodes.id, id));
-    return qrCode || undefined;
+  async getCustomerCodeById(id: string): Promise<CustomerCode | undefined> {
+    const [customerCode] = await db.select().from(customerCodes).where(eq(customerCodes.id, id));
+    return customerCode || undefined;
   }
 
-  async updateQRCode(id: string, updates: Partial<QRCode>): Promise<QRCode | undefined> {
-    const [qrCode] = await db
-      .update(qrCodes)
+  async updateCustomerCode(id: string, updates: Partial<CustomerCode>): Promise<CustomerCode | undefined> {
+    const [customerCode] = await db
+      .update(customerCodes)
       .set(updates)
-      .where(eq(qrCodes.id, id))
+      .where(eq(customerCodes.id, id))
       .returning();
-    return qrCode || undefined;
+    return customerCode || undefined;
   }
 
-  async getUserActiveQRCode(userId: string): Promise<QRCode | undefined> {
-    const [qrCode] = await db
+  async getUserActiveCustomerCode(userId: string): Promise<CustomerCode | undefined> {
+    const [customerCode] = await db
       .select()
-      .from(qrCodes)
+      .from(customerCodes)
       .where(
         and(
-          eq(qrCodes.userId, userId),
-          eq(qrCodes.status, 'ACTIVE'),
-          gte(qrCodes.expiresAt, new Date())
+          eq(customerCodes.userId, userId),
+          eq(customerCodes.status, 'ACTIVE'),
+          gte(customerCodes.expiresAt, new Date())
         )
       )
-      .orderBy(desc(qrCodes.createdAt))
+      .orderBy(desc(customerCodes.createdAt))
       .limit(1);
-    return qrCode || undefined;
+    return customerCode || undefined;
   }
 
   async createStamp(stampData: InsertStamp): Promise<Stamp> {
@@ -135,11 +135,11 @@ export class DatabaseStorage implements IStorage {
     return result.count;
   }
 
-  async getStampByQRCode(qrCodeId: string): Promise<Stamp | undefined> {
+  async getStampByCustomerCode(customerCodeId: string): Promise<Stamp | undefined> {
     const [stamp] = await db
       .select()
       .from(stamps)
-      .where(eq(stamps.qrCodeId, qrCodeId));
+      .where(eq(stamps.customerCodeId, customerCodeId));
     return stamp || undefined;
   }
 

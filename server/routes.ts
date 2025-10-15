@@ -169,8 +169,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get available rewards
       const availableRewards = await storage.getUserAvailableRewards(user.id);
       
-      // Get active QR code
-      const activeQRCode = await storage.getUserActiveQRCode(user.id);
+      // Get active customer code
+      const activeCustomerCode = await storage.getUserActiveCustomerCode(user.id);
 
       res.json({
         user: {
@@ -188,10 +188,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           status: reward.status,
           createdAt: reward.createdAt,
         })),
-        activeQRCode: activeQRCode ? {
-          id: activeQRCode.id,
-          code: activeQRCode.code,
-          expiresAt: activeQRCode.expiresAt,
+        activeCustomerCode: activeCustomerCode ? {
+          id: activeCustomerCode.id,
+          code: activeCustomerCode.code,
+          expiresAt: activeCustomerCode.expiresAt,
         } : null,
       });
     } catch (error) {
@@ -200,22 +200,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // QR Code routes
-  app.post('/api/qr/generate', authenticateUser, async (req, res) => {
+  // Customer Code routes
+  app.post('/api/customer-code/generate', authenticateUser, async (req, res) => {
     try {
       const user = req.user;
 
       if (user.userType !== 'CUSTOMER') {
-        return res.status(403).json({ message: 'Only customers can generate QR codes' });
+        return res.status(403).json({ message: 'Only customers can generate codes' });
       }
 
-      // Check if user has an active QR code
-      const existingQR = await storage.getUserActiveQRCode(user.id);
-      if (existingQR) {
+      // Check if user has an active customer code
+      const existingCode = await storage.getUserActiveCustomerCode(user.id);
+      if (existingCode) {
         return res.json({
-          id: existingQR.id,
-          code: existingQR.code,
-          expiresAt: existingQR.expiresAt,
+          id: existingCode.id,
+          code: existingCode.code,
+          expiresAt: existingCode.expiresAt,
         });
       }
 
@@ -223,11 +223,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const config = await storage.getSystemConfig();
       const expirationMinutes = config?.qrCodeExpirationMinutes || 60;
 
-      // Generate new QR code
-      const code = `QR-${nanoid(12)}`;
+      // Generate new 6-digit numeric code
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
       const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
 
-      const qrCode = await storage.createQRCode({
+      const customerCode = await storage.createCustomerCode({
         code,
         userId: user.id,
         status: 'ACTIVE',
@@ -237,57 +237,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log audit
       await storage.createAuditLog({
         userId: user.id,
-        action: 'QR_GENERATED',
-        details: { code: qrCode.code },
+        action: 'CUSTOMER_CODE_GENERATED',
+        details: { code: customerCode.code },
         ipAddress: req.ip,
         userAgent: req.get('User-Agent'),
       });
 
       res.json({
-        id: qrCode.id,
-        code: qrCode.code,
-        expiresAt: qrCode.expiresAt,
+        id: customerCode.id,
+        code: customerCode.code,
+        expiresAt: customerCode.expiresAt,
       });
     } catch (error) {
-      console.error('QR generation error:', error);
+      console.error('Customer code generation error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
 
-  app.post('/api/qr/validate', authenticateUser, async (req, res) => {
+  app.post('/api/customer-code/validate', authenticateUser, async (req, res) => {
     try {
       const manager = req.user;
       const { code } = validateQRSchema.parse(req.body);
 
       if (manager.userType !== 'MANAGER' && manager.userType !== 'ADMIN') {
-        return res.status(403).json({ message: 'Only managers can validate QR codes' });
+        return res.status(403).json({ message: 'Only managers can validate customer codes' });
       }
 
-      // Find QR code
-      const qrCode = await storage.getQRCode(code);
-      if (!qrCode) {
-        return res.status(404).json({ message: 'QR code not found' });
+      // Find customer code
+      const customerCode = await storage.getCustomerCode(code);
+      if (!customerCode) {
+        return res.status(404).json({ message: 'Customer code not found' });
       }
 
-      // Check if QR code is valid
-      if (qrCode.status !== 'ACTIVE') {
-        return res.status(400).json({ message: 'QR code is not active' });
+      // Check if customer code is valid
+      if (customerCode.status !== 'ACTIVE') {
+        return res.status(400).json({ message: 'Customer code is not active' });
       }
 
-      if (new Date() > qrCode.expiresAt) {
+      if (new Date() > customerCode.expiresAt) {
         // Mark as expired
-        await storage.updateQRCode(qrCode.id, { status: 'EXPIRED' });
-        return res.status(400).json({ message: 'QR code has expired' });
+        await storage.updateCustomerCode(customerCode.id, { status: 'EXPIRED' });
+        return res.status(400).json({ message: 'Customer code has expired' });
       }
 
-      // Check if QR code was already used
-      const existingStamp = await storage.getStampByQRCode(qrCode.id);
+      // Check if customer code was already used
+      const existingStamp = await storage.getStampByCustomerCode(customerCode.id);
       if (existingStamp) {
-        return res.status(400).json({ message: 'QR code has already been used' });
+        return res.status(400).json({ message: 'Customer code has already been used' });
       }
 
       // Get customer details
-      const customer = await storage.getUser(qrCode.userId);
+      const customer = await storage.getUser(customerCode.userId);
       if (!customer) {
         return res.status(404).json({ message: 'Customer not found' });
       }
@@ -296,10 +296,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const currentStampsCount = await storage.getUserActiveStampsCount(customer.id);
 
       res.json({
-        qrCode: {
-          id: qrCode.id,
-          code: qrCode.code,
-          createdAt: qrCode.createdAt,
+        customerCode: {
+          id: customerCode.id,
+          code: customerCode.code,
+          createdAt: customerCode.createdAt,
         },
         customer: {
           id: customer.id,
@@ -312,7 +312,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: error.errors[0].message });
       }
-      console.error('QR validation error:', error);
+      console.error('Customer code validation error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
@@ -326,28 +326,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Only managers can add stamps' });
       }
 
-      // Get QR code
-      const qrCode = await storage.getQRCodeById(qrCodeId);
-      if (!qrCode) {
-        return res.status(404).json({ message: 'QR code not found' });
+      // Get customer code
+      const customerCode = await storage.getCustomerCodeById(qrCodeId);
+      if (!customerCode) {
+        return res.status(404).json({ message: 'Customer code not found' });
       }
 
       // Check if stamp already exists
-      const existingStamp = await storage.getStampByQRCode(qrCode.id);
+      const existingStamp = await storage.getStampByCustomerCode(customerCode.id);
       if (existingStamp) {
-        return res.status(400).json({ message: 'Stamp already added for this QR code' });
+        return res.status(400).json({ message: 'Stamp already added for this customer code' });
       }
 
       // Create stamp
       const stamp = await storage.createStamp({
-        userId: qrCode.userId,
-        qrCodeId: qrCode.id,
+        userId: customerCode.userId,
+        customerCodeId: customerCode.id,
         createdById: manager.id,
         status: 'ACTIVE',
       });
 
-      // Mark QR code as used
-      await storage.updateQRCode(qrCode.id, { 
+      // Mark customer code as used
+      await storage.updateCustomerCode(customerCode.id, { 
         status: 'USED',
         usedAt: new Date(),
       });

@@ -8,29 +8,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import QRScanner from "@/components/qr-scanner";
+// Removed QR scanner - now using manual code entry
 import TabNavigation from "@/components/tab-navigation";
 
 export default function ManagerDashboard() {
   const { user, token, logout } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [manualQRCode, setManualQRCode] = useState('');
-  const [isScanning, setIsScanning] = useState(true); 
+  const [customerCode, setCustomerCode] = useState(''); 
 
-  const validateQRMutation = useMutation({
+  const validateCodeMutation = useMutation({
     mutationFn: async (code: string) => {
-      const response = await apiRequest('POST', '/api/qr/validate', { code });
+      const response = await apiRequest('POST', '/api/customer-code/validate', { code });
       return response.json();
     },
     onSuccess: (data) => {
       // Navigate to customer validation page
-      setLocation(`/manager/validate/${encodeURIComponent(data.qrCode.code)}`);
+      setLocation(`/manager/validate/${encodeURIComponent(data.customerCode.code)}`);
     },
     onError: (error: any) => {
       toast({
-        title: "QR Code validation failed",
-        description: error.message || "Please try scanning again.",
+        title: "Customer code validation failed",
+        description: error.message || "Please check the code and try again.",
         variant: "destructive",
       });
     },
@@ -48,24 +47,27 @@ export default function ManagerDashboard() {
     }
   }, [user, token, setLocation]);
 
-  const handleQRScan = (result: string) => {
-    setIsScanning(false);
-    validateQRMutation.mutate(result);
-    // Reset scanning after a delay
-    setTimeout(() => setIsScanning(true), 2000);
-  };
-
-  const handleManualValidation = () => {
-    if (!manualQRCode.trim()) {
+  const handleCodeValidation = () => {
+    if (!customerCode.trim()) {
       toast({
         title: "Invalid input",
-        description: "Please enter a QR code.",
+        description: "Please enter a customer code.",
         variant: "destructive",
       });
       return;
     }
     
-    validateQRMutation.mutate(manualQRCode.trim());
+    // Validate that it's a 6-digit number
+    if (!/^\d{6}$/.test(customerCode.trim())) {
+      toast({
+        title: "Invalid code format",
+        description: "Please enter a 6-digit numeric code.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    validateCodeMutation.mutate(customerCode.trim());
   };
 
   const handleLogout = () => {
@@ -82,7 +84,7 @@ export default function ManagerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Staff Portal</h2>
-            <p className="text-gray-300 text-sm">Scan customer QR codes</p>
+            <p className="text-gray-300 text-sm">Validate customer codes</p>
           </div>
           <Button
             variant="ghost"
@@ -95,50 +97,51 @@ export default function ManagerDashboard() {
         </div>
       </div>
 
-      {/* QR Scanner Interface */}
+      {/* Customer Code Entry */}
       <div className="p-6">
-        <QRScanner onScan={handleQRScan} isActive={isScanning} />
-
         {/* Instructions */}
-        <Card className="bg-blue-50 border-blue-200 mt-6 mb-6">
+        <Card className="bg-blue-50 border-blue-200 mb-6">
           <CardContent className="p-4">
             <div className="flex items-start">
               <Info className="h-5 w-5 text-blue-500 mr-3 mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-medium text-blue-900 mb-1">How to scan</h4>
+                <h4 className="font-medium text-blue-900 mb-1">How to validate</h4>
                 <p className="text-sm text-blue-700">
-                  Ask customer to show their QR code and position it within the frame above. 
-                  The system will automatically detect and validate the code.
+                  Ask the customer for their 6-digit code and enter it below to validate and add their stamp.
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Manual Entry Option */}
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-semibold text-[#2C3E50] mb-3">Manual Entry</h3>
+        {/* Code Entry */}
+        <div className="max-w-md mx-auto">
+          <h3 className="text-lg font-semibold text-[#2C3E50] mb-3 text-center">Customer Code Entry</h3>
           <div className="flex space-x-3">
             <Input
               type="text"
-              placeholder="Enter QR code manually"
-              value={manualQRCode}
-              onChange={(e) => setManualQRCode(e.target.value)}
-              className="flex-1"
+              placeholder="Enter 6-digit code"
+              value={customerCode}
+              onChange={(e) => setCustomerCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              className="flex-1 text-center text-2xl font-mono tracking-wider"
+              maxLength={6}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleManualValidation();
+                  handleCodeValidation();
                 }
               }}
             />
             <Button
               className="bg-[#2C3E50] hover:bg-gray-700 text-white"
-              onClick={handleManualValidation}
-              disabled={validateQRMutation.isPending}
+              onClick={handleCodeValidation}
+              disabled={validateCodeMutation.isPending || customerCode.length !== 6}
             >
-              {validateQRMutation.isPending ? "Validating..." : "Validate"}
+              {validateCodeMutation.isPending ? "Validating..." : "Validate"}
             </Button>
           </div>
+          <p className="text-sm text-gray-500 mt-2 text-center">
+            Enter the 6-digit code shown on the customer's phone
+          </p>
         </div>
       </div>
     </>

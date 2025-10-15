@@ -23,10 +23,10 @@ export const users = pgTable("users", {
   lastLoginAt: timestamp("last_login_at"),
 });
 
-// QR Codes table
-export const qrCodes = pgTable("qr_codes", {
+// Customer Codes table (replacing QR Codes)
+export const customerCodes = pgTable("customer_codes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  code: text("code").notNull().unique(),
+  code: text("code").notNull().unique(), // 6-digit numeric code
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
   status: qrCodeStatusEnum("status").notNull().default('ACTIVE'),
   expiresAt: timestamp("expires_at").notNull(),
@@ -38,7 +38,7 @@ export const qrCodes = pgTable("qr_codes", {
 export const stamps = pgTable("stamps", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
-  qrCodeId: uuid("qr_code_id").unique().references(() => qrCodes.id),
+  customerCodeId: uuid("customer_code_id").unique().references(() => customerCodes.id),
   createdById: uuid("created_by_id").notNull().references(() => users.id),
   status: stampStatusEnum("status").notNull().default('ACTIVE'),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -108,9 +108,9 @@ export const usersRelations = relations(users, ({ many }) => ({
   redemptionsProcessed: many(redemptions, { relationName: 'RedemptionProcessedBy' }),
 }));
 
-export const qrCodesRelations = relations(qrCodes, ({ one }) => ({
+export const customerCodesRelations = relations(customerCodes, ({ one }) => ({
   user: one(users, {
-    fields: [qrCodes.userId],
+    fields: [customerCodes.userId],
     references: [users.id],
   }),
   stamp: one(stamps),
@@ -121,9 +121,9 @@ export const stampsRelations = relations(stamps, ({ one }) => ({
     fields: [stamps.userId],
     references: [users.id],
   }),
-  qrCode: one(qrCodes, {
-    fields: [stamps.qrCodeId],
-    references: [qrCodes.id],
+  customerCode: one(customerCodes, {
+    fields: [stamps.customerCodeId],
+    references: [customerCodes.id],
   }),
   createdBy: one(users, {
     fields: [stamps.createdById],
@@ -165,7 +165,7 @@ export const insertUserSchema = createInsertSchema(users).omit({
   lastLoginAt: true,
 });
 
-export const insertQRCodeSchema = createInsertSchema(qrCodes).omit({
+export const insertCustomerCodeSchema = createInsertSchema(customerCodes).omit({
   id: true,
   createdAt: true,
   usedAt: true,
@@ -190,8 +190,8 @@ export const insertRedemptionSchema = createInsertSchema(redemptions).omit({
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type QRCode = typeof qrCodes.$inferSelect;
-export type InsertQRCode = z.infer<typeof insertQRCodeSchema>;
+export type CustomerCode = typeof customerCodes.$inferSelect;
+export type InsertCustomerCode = z.infer<typeof insertCustomerCodeSchema>;
 export type Stamp = typeof stamps.$inferSelect;
 export type InsertStamp = z.infer<typeof insertStampSchema>;
 export type Reward = typeof rewards.$inferSelect;

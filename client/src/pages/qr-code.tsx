@@ -1,54 +1,43 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ArrowLeft, RefreshCw, QrCode as QrCodeIcon, Clock } from "lucide-react";
+import { ArrowLeft, RefreshCw, Hash, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { generateQRCodeDataURL, formatTimeRemaining } from "@/lib/qr-utils";
+import { formatTimeRemaining } from "@/lib/qr-utils";
 import TabNavigation from "@/components/tab-navigation";
 
-export default function QRCodePage() {
+export default function CustomerCodePage() {
   const { user, token } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [qrCodeDataURL, setQrCodeDataURL] = useState<string>('');
   const [timeRemaining, setTimeRemaining] = useState<string>('');
 
-  const generateQRMutation = useMutation({
+  const generateCodeMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/qr/generate', {});
+      const response = await apiRequest('POST', '/api/customer-code/generate', {});
       return response.json();
     },
-    onSuccess: async (data) => {
-      try {
-        const dataURL = await generateQRCodeDataURL(data.code);
-        setQrCodeDataURL(dataURL);
-        toast({
-          title: "QR Code generated!",
-          description: "Show this to staff to collect your stamp.",
-        });
-      } catch (error) {
-        toast({
-          title: "Error generating QR code",
-          description: "Please try again.",
-          variant: "destructive",
-        });
-      }
+    onSuccess: (data) => {
+      toast({
+        title: "Customer Code generated!",
+        description: "Show this code to staff to collect your stamp.",
+      });
     },
     onError: (error: any) => {
       toast({
-        title: "Failed to generate QR code",
+        title: "Failed to generate customer code",
         description: error.message || "Please try again.",
         variant: "destructive",
       });
     },
   });
 
-  const { data: qrData, isLoading, refetch } = useQuery({
+  const { data: dashboardData, isLoading, refetch } = useQuery({
     queryKey: ['/api/user/dashboard'],
     queryFn: async () => {
       const response = await fetch('/api/user/dashboard', {
@@ -57,7 +46,7 @@ export default function QRCodePage() {
         },
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch QR data');
+        throw new Error('Failed to fetch dashboard data');
       }
       return response.json();
     },
@@ -66,33 +55,24 @@ export default function QRCodePage() {
 
   // Update timer
   useEffect(() => {
-    if (!qrData?.activeQRCode?.expiresAt) return;
+    if (!dashboardData?.activeCustomerCode?.expiresAt) return;
 
     const interval = setInterval(() => {
-      const remaining = formatTimeRemaining(qrData.activeQRCode.expiresAt);
+      const remaining = formatTimeRemaining(dashboardData.activeCustomerCode.expiresAt);
       setTimeRemaining(remaining);
       
       if (remaining === 'Expired') {
         clearInterval(interval);
         toast({
-          title: "QR Code expired",
-          description: "Please generate a new QR code.",
+          title: "Customer Code expired",
+          description: "Please generate a new customer code.",
           variant: "destructive",
         });
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [qrData?.activeQRCode?.expiresAt, toast]);
-
-  // Generate QR code image when data is available
-  useEffect(() => {
-    if (qrData?.activeQRCode?.code && !qrCodeDataURL) {
-      generateQRCodeDataURL(qrData.activeQRCode.code)
-        .then(setQrCodeDataURL)
-        .catch(console.error);
-    }
-  }, [qrData?.activeQRCode?.code, qrCodeDataURL]);
+  }, [dashboardData?.activeCustomerCode?.expiresAt, toast]);
 
   useEffect(() => {
     if (!user || !token || user.userType !== 'CUSTOMER') {
@@ -101,7 +81,7 @@ export default function QRCodePage() {
   }, [user, token, setLocation]);
 
   const handleGenerateNew = () => {
-    generateQRMutation.mutate();
+    generateCodeMutation.mutate();
     refetch();
   };
 
@@ -115,7 +95,6 @@ export default function QRCodePage() {
             <Skeleton className="h-6 w-32" />
           </div>
           <div className="text-center">
-            <Skeleton className="h-48 w-48 mx-auto rounded-2xl mb-6" />
             <Skeleton className="h-20 w-full rounded-lg mb-6" />
             <Skeleton className="h-12 w-full rounded-lg" />
           </div>
@@ -124,7 +103,7 @@ export default function QRCodePage() {
     );
   }
 
-  const activeQRCode = qrData?.activeQRCode;
+  const activeCustomerCode = dashboardData?.activeCustomerCode;
 
   return (
     <>
@@ -139,21 +118,22 @@ export default function QRCodePage() {
           >
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </Button>
-          <h2 className="text-xl font-bold text-[#2C3E50]">Your QR Code</h2>
+          <h2 className="text-xl font-bold text-[#2C3E50]">Your Customer Code</h2>
         </div>
 
         <div className="text-center">
-          {activeQRCode && qrCodeDataURL ? (
+          {activeCustomerCode ? (
             <>
               <Card className="border-2 border-dashed border-gray-300 mb-6">
                 <CardContent className="p-8">
-                  <img
-                    src={qrCodeDataURL}
-                    alt="QR Code"
-                    className="w-48 h-48 mx-auto rounded-lg"
-                  />
-                  <p className="text-sm text-gray-600 mt-4 font-mono">
-                    {activeQRCode.code}
+                  <div className="bg-[#2C3E50] text-white rounded-lg p-6 mb-4">
+                    <Hash className="w-8 h-8 mx-auto mb-2" />
+                    <div className="text-4xl font-mono font-bold tracking-wider">
+                      {activeCustomerCode.code}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Show this 6-digit code to staff
                   </p>
                 </CardContent>
               </Card>
@@ -167,7 +147,7 @@ export default function QRCodePage() {
                     </span>
                   </div>
                   <p className="text-sm text-orange-600">
-                    Show this QR code to staff to collect your stamp
+                    Tell staff your code to collect your stamp
                   </p>
                 </CardContent>
               </Card>
@@ -175,31 +155,47 @@ export default function QRCodePage() {
           ) : (
             <Card className="border-2 border-dashed border-gray-300 mb-6">
               <CardContent className="p-8">
-                <div className="w-48 h-48 mx-auto rounded-lg bg-gray-100 flex items-center justify-center">
-                  <QrCodeIcon className="h-16 w-16 text-gray-400" />
-                </div>
-                <p className="text-sm text-gray-600 mt-4">
-                  No active QR code
-                </p>
+                <Hash className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                <p className="text-gray-500 mb-4">No customer code available</p>
+                <Button
+                  onClick={handleGenerateNew}
+                  disabled={generateCodeMutation.isPending}
+                  className="bg-[#2C3E50] hover:bg-gray-700 text-white"
+                >
+                  {generateCodeMutation.isPending ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Hash className="w-4 h-4 mr-2" />
+                      Generate Customer Code
+                    </>
+                  )}
+                </Button>
               </CardContent>
             </Card>
           )}
 
-          <div className="space-y-3">
+          <div className="text-center">
             <Button
-              className="w-full bg-[#FF6B35] hover:bg-[#E55A2E] text-white py-3"
               onClick={handleGenerateNew}
-              disabled={generateQRMutation.isPending}
-            >
-              <RefreshCw className={`mr-2 h-4 w-4 ${generateQRMutation.isPending ? 'animate-spin' : ''}`} />
-              {activeQRCode ? 'Generate New QR' : 'Generate QR Code'}
-            </Button>
-            <Button
+              disabled={generateCodeMutation.isPending}
               variant="outline"
-              className="w-full py-3"
-              onClick={() => setLocation('/dashboard')}
+              className="border-gray-300 text-gray-600 hover:bg-gray-50"
             >
-              Back to Dashboard
+              {generateCodeMutation.isPending ? (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Generate New Code
+                </>
+              )}
             </Button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "./lib/auth.tsx";
+import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import CustomerDashboard from "@/pages/customer-dashboard";
@@ -18,7 +19,8 @@ import NotFound from "@/pages/not-found";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Login} />
+      <Route path="/" component={Home} />
+      <Route path="/home" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/dashboard" component={CustomerDashboard} />

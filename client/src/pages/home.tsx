@@ -1,22 +1,10 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Smartphone, BarChart3, Shield, QrCode, Users, Award, Lock } from "lucide-react";
+import { ArrowRight, Smartphone, BarChart3, Shield, Hash, Users, Award, Lock } from "lucide-react";
 import LandingNavbar from "@/components/landing/navbar";
 import LandingHero from "@/components/landing/hero";
 import FeatureCard from "@/components/landing/feature-card";
 import LandingFooter from "@/components/landing/footer";
-import ThemedChart from "@/components/themed-chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
-const mockData = [
-  { name: "Mon", stamps: 45, rewards: 12 },
-  { name: "Tue", stamps: 52, rewards: 15 },
-  { name: "Wed", stamps: 38, rewards: 10 },
-  { name: "Thu", stamps: 61, rewards: 18 },
-  { name: "Fri", stamps: 78, rewards: 22 },
-  { name: "Sat", stamps: 95, rewards: 28 },
-  { name: "Sun", stamps: 88, rewards: 25 },
-];
 
 export default function Home() {
   return (
@@ -47,7 +35,7 @@ export default function Home() {
                 title="Client Experience"
                 description="Seamless mobile experience for customers to collect stamps and redeem rewards. Simple, fast, and intuitive."
                 features={[
-                  "QR code generation",
+                  "Customer code generation",
                   "Real-time stamp tracking",
                   "Reward notifications",
                   "Transaction history"
@@ -79,107 +67,105 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section */}
+        {/* Features Section */}
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Left - Chart */}
+            <div className="text-center max-w-3xl mx-auto space-y-6 mb-16">
+              <h2 className="text-4xl font-extrabold tracking-[-0.02em] text-text-primary">
+                How it works
+              </h2>
+              <p className="text-lg text-text-muted">
+                A complete digital loyalty solution designed for modern restaurants.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left - Features */}
               <div className="space-y-6">
-                <div className="space-y-3">
-                  <h2 className="text-4xl font-extrabold tracking-[-0.02em] text-text-primary">
-                    Real-time insights
-                  </h2>
-                  <p className="text-lg text-text-muted">
-                    Track daily activity with comprehensive analytics and visualizations.
-                  </p>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#e63946]/20 flex items-center justify-center flex-shrink-0">
+                    <Hash className="w-6 h-6 text-[#e63946]" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Customer Code System
+                    </h3>
+                    <p className="text-text-muted">
+                      Generate unique 6-digit codes for each customer. Fast, secure, and easy to validate at the point of sale.
+                    </p>
+                  </div>
                 </div>
-                <div className="card-base p-6">
-                  <ThemedChart>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={mockData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1b2531" />
-                        <XAxis 
-                          dataKey="name" 
-                          stroke="#9AA7B2"
-                          style={{ fontSize: '12px' }}
-                        />
-                        <YAxis 
-                          stroke="#9AA7B2"
-                          style={{ fontSize: '12px' }}
-                        />
-                        <Tooltip 
-                          contentStyle={{
-                            backgroundColor: '#0f141a',
-                            border: '1px solid #1e2936',
-                            borderRadius: '8px',
-                            color: '#e6edf3'
-                          }}
-                        />
-                        <Bar dataKey="stamps" fill="#e63946" radius={[8, 8, 0, 0]} />
-                        <Bar dataKey="rewards" fill="#facc15" radius={[8, 8, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </ThemedChart>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#facc15]/20 flex items-center justify-center flex-shrink-0">
+                    <Users className="w-6 h-6 text-[#facc15]" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Customer Management
+                    </h3>
+                    <p className="text-text-muted">
+                      Track customer activity, stamp collections, and reward redemptions in real-time.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0">
+                    <Award className="w-6 h-6 text-[#22c55e]" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Reward System
+                    </h3>
+                    <p className="text-text-muted">
+                      Automated reward tracking. Customers earn stamps and redeem rewards seamlessly.
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Right - Features */}
-              <div className="space-y-8">
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#e63946]/20 flex items-center justify-center flex-shrink-0">
-                      <QrCode className="w-6 h-6 text-[#e63946]" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-text-primary mb-2">
-                        QR Code Integration
-                      </h3>
-                      <p className="text-text-muted">
-                        Generate unique QR codes for each customer. Fast, secure, and easy to validate at the point of sale.
-                      </p>
-                    </div>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#7c3aed]/20 flex items-center justify-center flex-shrink-0">
+                    <BarChart3 className="w-6 h-6 text-[#7c3aed]" />
                   </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#facc15]/20 flex items-center justify-center flex-shrink-0">
-                      <Users className="w-6 h-6 text-[#facc15]" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-text-primary mb-2">
-                        Customer Management
-                      </h3>
-                      <p className="text-text-muted">
-                        Track customer activity, stamp collections, and reward redemptions in real-time.
-                      </p>
-                    </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Manager Dashboard
+                    </h3>
+                    <p className="text-text-muted">
+                      Complete admin panel for staff to validate codes, manage rewards, and track activity.
+                    </p>
                   </div>
+                </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0">
-                      <Award className="w-6 h-6 text-[#22c55e]" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-text-primary mb-2">
-                        Reward System
-                      </h3>
-                      <p className="text-text-muted">
-                        Automated reward tracking. Customers earn stamps and redeem rewards seamlessly.
-                      </p>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0">
+                    <Lock className="w-6 h-6 text-[#22c55e]" />
                   </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Secure & Reliable
+                    </h3>
+                    <p className="text-text-muted">
+                      Bank-grade security with encrypted transactions and comprehensive audit trails.
+                    </p>
+                  </div>
+                </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#7c3aed]/20 flex items-center justify-center flex-shrink-0">
-                      <Lock className="w-6 h-6 text-[#7c3aed]" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-text-primary mb-2">
-                        Secure & Reliable
-                      </h3>
-                      <p className="text-text-muted">
-                        Bank-grade security with encrypted transactions and comprehensive audit trails.
-                      </p>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#e63946]/20 flex items-center justify-center flex-shrink-0">
+                    <Shield className="w-6 h-6 text-[#e63946]" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Data Privacy
+                    </h3>
+                    <p className="text-text-muted">
+                      Customer data is encrypted and stored securely. Full compliance with privacy regulations.
+                    </p>
                   </div>
                 </div>
               </div>

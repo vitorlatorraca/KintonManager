@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import HeroTitle from "@/components/hero-title";
 import OverviewCard from "@/components/overview-card";
-import MetricCard from "@/components/metric-card";
-import BudgetBar from "@/components/budget-bar";
 import Pill from "@/components/pill";
-import { QrCode, Users, Gift, TrendingUp, Shield, Cloud, BarChart3, Lock } from "lucide-react";
+import { Hash, Gift, Cloud, BarChart3, Lock } from "lucide-react";
 
 export default function LandingHero() {
   return (
@@ -39,60 +37,64 @@ export default function LandingHero() {
             </div>
           </div>
 
-          {/* Right Column - Overview Card */}
+          {/* Right Column - Features Card */}
           <div className="lg:col-span-5">
-            <OverviewCard title="At-a-glance overview">
-              {/* Metric Cards */}
-              <div className="grid grid-cols-1 gap-4">
-                <MetricCard
-                  title="Active Customers"
-                  value="1,247"
-                  hint="+12% this month"
-                  icon={<Users className="w-5 h-5" />}
-                />
-                <MetricCard
-                  title="Redeemed Rewards"
-                  value="342"
-                  hint="+8% this month"
-                  icon={<Gift className="w-5 h-5" />}
-                />
-                <MetricCard
-                  title="Pending Stamps"
-                  value="892"
-                  hint="Ready to redeem"
-                  icon={<TrendingUp className="w-5 h-5" />}
-                />
-              </div>
+            <OverviewCard title="Key Features">
+              {/* Feature List */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#e63946]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Hash className="w-5 h-5 text-[#e63946]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-text-primary mb-1">Customer Code System</h4>
+                    <p className="text-sm text-text-muted">
+                      Generate unique 6-digit codes for customers to collect stamps digitally.
+                    </p>
+                  </div>
+                </div>
 
-              {/* Budget Bars */}
-              <div className="space-y-4 pt-4 border-t border-line">
-                <h4 className="text-sm font-semibold text-text-primary">
-                  Platform Usage
-                </h4>
-                <BudgetBar
-                  label="QR Usage"
-                  value={72}
-                  pct={72}
-                  color="#e63946"
-                />
-                <BudgetBar
-                  label="Reward Claims"
-                  value={55}
-                  pct={55}
-                  color="#facc15"
-                />
-                <BudgetBar
-                  label="Active Sessions"
-                  value={88}
-                  pct={88}
-                  color="#22c55e"
-                />
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#facc15]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Gift className="w-5 h-5 text-[#facc15]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-text-primary mb-1">Reward Tracking</h4>
+                    <p className="text-sm text-text-muted">
+                      Automated stamp collection and reward redemption system.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#7c3aed]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <BarChart3 className="w-5 h-5 text-[#7c3aed]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-text-primary mb-1">Manager Dashboard</h4>
+                    <p className="text-sm text-text-muted">
+                      Complete admin panel for staff to validate codes and manage rewards.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Lock className="w-5 h-5 text-[#22c55e]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-text-primary mb-1">Secure & Reliable</h4>
+                    <p className="text-sm text-text-muted">
+                      Bank-grade security with encrypted transactions and audit trails.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Pills */}
               <div className="flex flex-wrap gap-2 pt-4 border-t border-line">
-                <Pill icon={<QrCode className="w-3 h-3" />}>
-                  QR integration
+                <Pill icon={<Hash className="w-3 h-3" />}>
+                  Code system
                 </Pill>
                 <Pill icon={<Cloud className="w-3 h-3" />}>
                   Cloud sync

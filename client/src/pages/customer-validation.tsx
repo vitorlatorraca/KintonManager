@@ -20,9 +20,9 @@ export default function CustomerValidation() {
   const [showRewardCelebration, setShowRewardCelebration] = useState(false);
 
   const { data: validationData, isLoading, error } = useQuery({
-    queryKey: ['/api/qr/validate', qrCode],
+    queryKey: ['/api/customer-code/validate', qrCode],
     queryFn: async () => {
-      const response = await apiRequest('POST', '/api/qr/validate', { 
+      const response = await apiRequest('POST', '/api/customer-code/validate', { 
         code: decodeURIComponent(qrCode || '') 
       });
       return response.json();
@@ -34,7 +34,7 @@ export default function CustomerValidation() {
   const addStampMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest('POST', '/api/stamps/add', {
-        qrCodeId: validationData.qrCode.id,
+        customerCodeId: validationData.customerCode.id,
       });
       return response.json();
     },
@@ -77,8 +77,8 @@ export default function CustomerValidation() {
   useEffect(() => {
     if (error) {
       toast({
-        title: "QR Code validation failed",
-        description: "This QR code is invalid, expired, or already used.",
+        title: "Customer code validation failed",
+        description: "This customer code is invalid, expired, or already used.",
         variant: "destructive",
       });
       setTimeout(() => setLocation('/manager/dashboard'), 2000);
@@ -129,15 +129,15 @@ export default function CustomerValidation() {
           <Card className="border-2 border-red-200 bg-red-50">
             <CardContent className="p-6 text-center">
               <div className="text-red-500 text-4xl mb-4">❌</div>
-              <h3 className="text-lg font-semibold text-red-800 mb-2">Invalid QR Code</h3>
+              <h3 className="text-lg font-semibold text-red-800 mb-2">Invalid Customer Code</h3>
               <p className="text-red-600 mb-4">
-                This QR code is invalid, expired, or has already been used.
+                This customer code is invalid, expired, or has already been used.
               </p>
               <Button
                 className="bg-[#2C3E50] hover:bg-gray-700 text-white"
                 onClick={handleBackToScanner}
               >
-                Back to Scanner
+                Back to Dashboard
               </Button>
             </CardContent>
           </Card>
@@ -185,7 +185,7 @@ export default function CustomerValidation() {
                 className="w-full bg-[#FF6B35] hover:bg-[#E55A2E] text-white py-3"
                 onClick={handleBackToScanner}
               >
-                Scan Next Customer
+                Validate Next Customer
               </Button>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function CustomerValidation() {
     );
   }
 
-  const { customer, qrCode: qrCodeData } = validationData;
+  const { customer, customerCode } = validationData;
 
   return (
     <>
@@ -241,10 +241,10 @@ export default function CustomerValidation() {
             <Card className="bg-gray-50">
               <CardContent className="p-3">
                 <p className="text-sm text-gray-700">
-                  QR Code: <span className="font-mono">{qrCodeData.code}</span>
+                  Customer Code: <span className="font-mono">{customerCode.code}</span>
                 </p>
                 <p className="text-sm text-gray-700">
-                  Generated: {new Date(qrCodeData.createdAt).toLocaleString()}
+                  Generated: {new Date(customerCode.createdAt).toLocaleString()}
                 </p>
               </CardContent>
             </Card>
@@ -268,7 +268,7 @@ export default function CustomerValidation() {
             onClick={handleBackToScanner}
             disabled={addStampMutation.isPending}
           >
-            Cancel & Scan Another
+            Cancel & Validate Another
           </Button>
         </div>
       </div>

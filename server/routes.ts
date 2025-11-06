@@ -36,8 +36,7 @@ const validateQRSchema = z.object({
 });
 
 const addStampSchema = z.object({
-  qrCodeId: z.string().uuid(),
-  managerId: z.string().uuid(),
+  customerCodeId: z.string().uuid(),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -320,14 +319,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/stamps/add', authenticateUser, async (req, res) => {
     try {
       const manager = req.user;
-      const { qrCodeId } = addStampSchema.parse(req.body);
+      const { customerCodeId } = addStampSchema.parse(req.body);
 
       if (manager.userType !== 'MANAGER' && manager.userType !== 'ADMIN') {
         return res.status(403).json({ message: 'Only managers can add stamps' });
       }
 
       // Get customer code
-      const customerCode = await storage.getCustomerCodeById(qrCodeId);
+      const customerCode = await storage.getCustomerCodeById(customerCodeId);
       if (!customerCode) {
         return res.status(404).json({ message: 'Customer code not found' });
       }
@@ -353,7 +352,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Get updated stamps count
-      const newStampsCount = await storage.getUserActiveStampsCount(qrCode.userId);
+      const newStampsCount = await storage.getUserActiveStampsCount(customerCode.userId);
 
       // Check if user completed 10 stamps
       let rewardCreated = false;
@@ -364,7 +363,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const expiresAt = new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000);
 
         await storage.createReward({
-          userId: qrCode.userId,
+          userId: customerCode.userId,
           rewardType: 'GYOZA_FREE',
           status: 'AVAILABLE',
           stampsUsed: 10,
@@ -375,7 +374,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Log audit
         await storage.createAuditLog({
-          userId: qrCode.userId,
+          userId: customerCode.userId,
           action: 'REWARD_CREATED',
           details: { rewardType: 'GYOZA_FREE', stampsUsed: 10 },
           ipAddress: req.ip,
@@ -385,11 +384,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Log audit
       await storage.createAuditLog({
-        userId: qrCode.userId,
+        userId: customerCode.userId,
         action: 'STAMP_ADDED',
         details: { 
           stampId: stamp.id,
-          qrCodeId: qrCode.id,
+          customerCodeId: customerCode.id,
           managerId: manager.id,
           newStampsCount,
         },

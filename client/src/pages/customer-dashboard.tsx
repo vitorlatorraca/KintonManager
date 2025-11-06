@@ -1,15 +1,20 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { User, QrCode, History, Settings, Gift } from "lucide-react";
+import { User, QrCode, History, Settings, Gift, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import AppShell from "@/components/app-shell";
+import HeroTitle from "@/components/hero-title";
+import MetricCard from "@/components/metric-card";
+import BudgetBar from "@/components/budget-bar";
+import OverviewCard from "@/components/overview-card";
+import Pill from "@/components/pill";
+import CTAButtons from "@/components/cta-buttons";
 import StampProgress from "@/components/stamp-progress";
-import TabNavigation from "@/components/tab-navigation";
-import KintonLogo from "@/components/kinton-logo";
 
 export default function CustomerDashboard() {
   const { user, token, logout } = useAuth();
@@ -60,136 +65,181 @@ export default function CustomerDashboard() {
 
   if (isLoading || !dashboardData) {
     return (
-      <>
-        <TabNavigation />
-        <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <Skeleton className="h-6 w-32 mb-2" />
-              <Skeleton className="h-4 w-24" />
+      <AppShell showNav={false}>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-7 space-y-6">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-32 w-full rounded-2xl" />
             </div>
-            <Skeleton className="h-10 w-10 rounded-full" />
+            <div className="lg:col-span-5">
+              <Skeleton className="h-96 w-full rounded-2xl" />
+            </div>
           </div>
-          <Skeleton className="h-32 w-full rounded-2xl" />
-          <Skeleton className="h-20 w-full rounded-lg" />
-          <Skeleton className="h-16 w-full rounded-xl" />
         </div>
-      </>
+      </AppShell>
     );
   }
 
   const { stamps, rewards } = dashboardData;
+  const stampsProgress = Math.round((stamps.current / stamps.required) * 100);
+  const stampsRemaining = stamps.required - stamps.current;
 
   return (
-    <>
-      <TabNavigation />
-      <div className="p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold kinton-yellow kinton-text-shadow">
-              HELLO, {user?.name?.toUpperCase() || "CUSTOMER"}!
-            </h2>
-            <p className="text-[#FFD700]/80 font-medium">
-              Your stamp collection
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="kinton-button rounded-full"
-            onClick={() => setLocation("/profile")}
-          >
-            <User className="h-5 w-5" />
-          </Button>
-        </div>
-
-        {/* Stamp Progress Card */}
-        <Card className="kinton-card">
-          <CardContent className="p-6">
-            <StampProgress current={stamps.current} total={stamps.required} />
-          </CardContent>
-        </Card>
-
-        {/* Available Rewards */}
-        {rewards && rewards.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold kinton-yellow kinton-text-shadow uppercase tracking-wide">
-              AVAILABLE REWARDS
-            </h3>
+    <AppShell showNav={false}>
+      <div className="space-y-8">
+        {/* Hero Section with Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Hero */}
+          <div className="lg:col-span-7 space-y-6">
             <div className="space-y-4">
-              {rewards.map((reward: any) => (
-                <Card
-                  key={reward.id}
-                  className="kinton-card border-2 border-[#FFD700]/50"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="w-16 h-16 kinton-stamp mr-4 text-2xl">
-                          🥟
-                        </div>
-                        <div>
-                          <h4 className="font-bold kinton-yellow text-lg uppercase tracking-wide">
-                            {reward.type === "GYOZA_FREE"
-                              ? "FREE GYOZA"
-                              : reward.type}
-                          </h4>
-                          <p className="text-[#FFD700]/80 font-medium">
-                            Ready to redeem!
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        className="kinton-button text-lg px-6 py-3"
-                        onClick={() => {
-                          toast({
-                            title: "Reward redeemed!",
-                            description:
-                              "Show this to staff to receive your free gyoza.",
-                          });
-                        }}
-                      >
-                        REDEEM
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <HeroTitle>
+                Hello, {user?.name || "Customer"}
+              </HeroTitle>
+              <p className="text-base text-text-muted max-w-2xl">
+                Track your stamp collection and redeem rewards at Kinton Ramen.
+                Collect {stamps.required} stamps to earn a free gyoza!
+              </p>
             </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <CTAButtons
+                primaryLabel="Generate QR Code"
+                primaryOnClick={() => setLocation("/qr-code")}
+                secondaryLabel="View History"
+                secondaryOnClick={() => setLocation("/history")}
+              />
+            </div>
+
+            {/* Stamp Progress Card */}
+            <Card className="card-base">
+              <CardContent className="p-6">
+                <StampProgress current={stamps.current} total={stamps.required} />
+              </CardContent>
+            </Card>
+
+            {/* Available Rewards */}
+            {rewards && rewards.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-text-primary">
+                  Available Rewards
+                </h3>
+                <div className="space-y-3">
+                  {rewards.map((reward: any) => (
+                    <Card key={reward.id} className="card-base hover-lift">
+                      <CardContent className="p-5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                              <Gift className="w-6 h-6 text-accent" />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-text-primary">
+                                {reward.type === "GYOZA_FREE"
+                                  ? "Free Gyoza"
+                                  : reward.type}
+                              </h4>
+                              <p className="text-sm text-text-muted">
+                                Ready to redeem
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            className="btn-primary"
+                            onClick={() => {
+                              toast({
+                                title: "Reward redeemed!",
+                                description:
+                                  "Show this to staff to receive your free gyoza.",
+                              });
+                            }}
+                          >
+                            Redeem
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Action Buttons */}
-        <div className="space-y-4">
-          <Button
-            className="w-full kinton-button py-6 text-xl"
-            onClick={() => setLocation("/qr-code")}
-          >
-            <QrCode className="mr-3 h-6 w-6" />
-            GENERATE QR CODE
-          </Button>
+          {/* Right Column - Overview */}
+          <div className="lg:col-span-5">
+            <OverviewCard title="At-a-glance overview">
+              {/* Metric Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
+                <MetricCard
+                  title="Current Stamps"
+                  value={stamps.current}
+                  hint={`${stampsRemaining} to go`}
+                  icon={<TrendingUp className="w-5 h-5" />}
+                />
+                <MetricCard
+                  title="Progress"
+                  value={`${stampsProgress}%`}
+                  hint="Complete collection"
+                  icon={<Award className="w-5 h-5" />}
+                />
+                <MetricCard
+                  title="Available Rewards"
+                  value={rewards?.length || 0}
+                  hint="Ready to redeem"
+                  icon={<Gift className="w-5 h-5" />}
+                />
+              </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Button
-              variant="outline"
-              className="kinton-tab py-4 text-base"
-              onClick={() => setLocation("/history")}
-            >
-              <History className="mr-2 h-5 w-5" />
-              HISTORY
-            </Button>
-            <Button
-              variant="outline"
-              className="kinton-tab py-4 text-base"
-              onClick={() => setLocation("/profile")}
-            >
-              <Settings className="mr-2 h-5 w-5" />
-              PROFILE
-            </Button>
+              {/* Budget Bars */}
+              <div className="space-y-4 pt-4 border-t border-line">
+                <h4 className="text-sm font-semibold text-text-primary">
+                  Collection Progress
+                </h4>
+                <BudgetBar
+                  label="Stamps Collected"
+                  value={stamps.current}
+                  pct={stampsProgress}
+                  color="#7c3aed"
+                />
+                <BudgetBar
+                  label="Stamps Remaining"
+                  value={stampsRemaining}
+                  pct={100 - stampsProgress}
+                  color="#1e2936"
+                />
+              </div>
+
+              {/* Pills */}
+              <div className="flex flex-wrap gap-2 pt-4 border-t border-line">
+                <Pill icon={<Award className="w-3 h-3" />}>
+                  Bank-grade security
+                </Pill>
+                <Pill icon={<Gift className="w-3 h-3" />}>
+                  Smart rewards
+                </Pill>
+                <Pill icon={<QrCode className="w-3 h-3" />}>
+                  QR code ready
+                </Pill>
+                <Pill icon={<History className="w-3 h-3" />}>
+                  Full history
+                </Pill>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-line space-y-3">
+                <Button
+                  variant="ghost"
+                  className="w-full btn-ghost"
+                  onClick={() => setLocation("/profile")}
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  View Profile
+                </Button>
+              </div>
+            </OverviewCard>
           </div>
         </div>
       </div>
-    </>
+    </AppShell>
   );
 }

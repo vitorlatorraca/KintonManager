@@ -9,7 +9,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { formatTimeRemaining } from "@/lib/qr-utils";
-import TabNavigation from "@/components/tab-navigation";
+import AppShell from "@/components/app-shell";
+import HeroTitle from "@/components/hero-title";
 
 export default function CustomerCodePage() {
   const { user, token } = useAuth();
@@ -87,119 +88,109 @@ export default function CustomerCodePage() {
 
   if (isLoading) {
     return (
-      <>
-        <TabNavigation />
-        <div className="p-6">
-          <div className="flex items-center mb-6">
-            <Skeleton className="h-10 w-10 rounded-full mr-3" />
-            <Skeleton className="h-6 w-32" />
-          </div>
-          <div className="text-center">
-            <Skeleton className="h-20 w-full rounded-lg mb-6" />
-            <Skeleton className="h-12 w-full rounded-lg" />
-          </div>
+      <AppShell showNav={false}>
+        <div className="max-w-2xl mx-auto space-y-6">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-64 w-full rounded-2xl" />
         </div>
-      </>
+      </AppShell>
     );
   }
 
   const activeCustomerCode = dashboardData?.activeCustomerCode;
 
   return (
-    <>
-      <TabNavigation />
-      <div className="p-6">
-        <div className="flex items-center mb-6">
+    <AppShell showNav={false}>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full hover:bg-gray-100 mr-3"
+            className="btn-ghost rounded-full"
             onClick={() => setLocation('/dashboard')}
           >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-xl font-bold text-[#2C3E50]">Your Customer Code</h2>
+          <HeroTitle className="text-3xl">Your Customer Code</HeroTitle>
         </div>
 
-        <div className="text-center">
-          {activeCustomerCode ? (
-            <>
-              <Card className="border-2 border-dashed border-gray-300 mb-6">
-                <CardContent className="p-8">
-                  <div className="bg-[#2C3E50] text-white rounded-lg p-6 mb-4">
-                    <Hash className="w-8 h-8 mx-auto mb-2" />
-                    <div className="text-4xl font-mono font-bold tracking-wider">
-                      {activeCustomerCode.code}
-                    </div>
+        {activeCustomerCode ? (
+          <>
+            <Card className="card-base">
+              <CardContent className="p-8 text-center">
+                <div className="bg-accent/10 border border-accent/20 rounded-xl p-8 mb-6">
+                  <Hash className="w-10 h-10 mx-auto mb-4 text-accent" />
+                  <div className="text-5xl font-mono font-bold tracking-wider text-text-primary">
+                    {activeCustomerCode.code}
                   </div>
-                  <p className="text-sm text-gray-600">
-                    Show this 6-digit code to staff
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-orange-50 border-orange-200 mb-6">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Clock className="h-4 w-4 text-orange-500 mr-2" />
-                    <span className="text-orange-700 font-medium">
-                      Expires in: <span className="font-mono">{timeRemaining}</span>
-                    </span>
-                  </div>
-                  <p className="text-sm text-orange-600">
-                    Tell staff your code to collect your stamp
-                  </p>
-                </CardContent>
-              </Card>
-            </>
-          ) : (
-            <Card className="border-2 border-dashed border-gray-300 mb-6">
-              <CardContent className="p-8">
-                <Hash className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-500 mb-4">No customer code available</p>
-                <Button
-                  onClick={handleGenerateNew}
-                  disabled={generateCodeMutation.isPending}
-                  className="bg-[#2C3E50] hover:bg-gray-700 text-white"
-                >
-                  {generateCodeMutation.isPending ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Hash className="w-4 h-4 mr-2" />
-                      Generate Customer Code
-                    </>
-                  )}
-                </Button>
+                </div>
+                <p className="text-sm text-text-muted">
+                  Show this 6-digit code to staff to collect your stamp
+                </p>
               </CardContent>
             </Card>
-          )}
 
-          <div className="text-center">
-            <Button
-              onClick={handleGenerateNew}
-              disabled={generateCodeMutation.isPending}
-              variant="outline"
-              className="border-gray-300 text-gray-600 hover:bg-gray-50"
-            >
-              {generateCodeMutation.isPending ? (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Generate New Code
-                </>
-              )}
-            </Button>
-          </div>
+            <Card className="card-base border-warning/20 bg-warning/5">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <Clock className="h-5 w-5 text-warning" />
+                  <span className="text-warning font-medium">
+                    Expires in: <span className="font-mono">{timeRemaining}</span>
+                  </span>
+                </div>
+                <p className="text-sm text-text-muted text-center">
+                  Tell staff your code to collect your stamp
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <Card className="card-base border-dashed">
+            <CardContent className="p-12 text-center">
+              <Hash className="w-16 h-16 mx-auto mb-4 text-text-muted" />
+              <p className="text-text-muted mb-6">No customer code available</p>
+              <Button
+                onClick={handleGenerateNew}
+                disabled={generateCodeMutation.isPending}
+                className="btn-primary"
+              >
+                {generateCodeMutation.isPending ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Hash className="w-4 h-4 mr-2" />
+                    Generate Customer Code
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="text-center">
+          <Button
+            onClick={handleGenerateNew}
+            disabled={generateCodeMutation.isPending}
+            variant="ghost"
+            className="btn-ghost"
+          >
+            {generateCodeMutation.isPending ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Generate New Code
+              </>
+            )}
+          </Button>
         </div>
       </div>
-    </>
+    </AppShell>
   );
 }

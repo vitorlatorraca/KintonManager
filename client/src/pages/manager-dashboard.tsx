@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
-import { LogOut, Info } from "lucide-react";
+import { LogOut, Info, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-// Removed QR scanner - now using manual code entry
-import TabNavigation from "@/components/tab-navigation";
+import AppShell from "@/components/app-shell";
+import HeroTitle from "@/components/hero-title";
 
 export default function ManagerDashboard() {
   const { user, token, logout } = useAuth();
@@ -77,36 +77,32 @@ export default function ManagerDashboard() {
   if (!user) return null;
 
   return (
-    <>
-      <TabNavigation />
-      {/* Header */}
-      <div className="bg-[#222d38] text-white p-4">
+    <AppShell showNav={false}>
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Staff Portal</h2>
-            <p className="text-gray-300 text-sm">Validate customer codes</p>
+            <HeroTitle className="text-3xl">Staff Portal</HeroTitle>
+            <p className="text-text-muted mt-2">Validate customer codes</p>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-gray-600"
+            className="btn-ghost rounded-full"
             onClick={handleLogout}
           >
             <LogOut className="h-5 w-5" />
           </Button>
         </div>
-      </div>
 
-      {/* Customer Code Entry */}
-      <div className="p-6">
         {/* Instructions */}
-        <Card className="bg-blue-50 border-blue-200 mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-start">
-              <Info className="h-5 w-5 text-blue-500 mr-3 mt-1 flex-shrink-0" />
+        <Card className="card-base border-info/20 bg-info/5">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <Info className="h-5 w-5 text-info mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-medium text-blue-900 mb-1">How to validate</h4>
-                <p className="text-sm text-blue-700">
+                <h4 className="font-semibold text-text-primary mb-2">How to validate</h4>
+                <p className="text-sm text-text-muted">
                   Ask the customer for their 6-digit code and enter it below to validate and add their stamp.
                 </p>
               </div>
@@ -115,35 +111,45 @@ export default function ManagerDashboard() {
         </Card>
 
         {/* Code Entry */}
-        <div className="max-w-md mx-auto">
-          <h3 className="text-lg font-semibold text-[#2C3E50] mb-3 text-center">Customer Code Entry</h3>
-          <div className="flex space-x-3">
-            <Input
-              type="text"
-              placeholder="Enter 6-digit code"
-              value={customerCode}
-              onChange={(e) => setCustomerCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-              className="flex-1 text-center text-2xl font-mono tracking-wider"
-              maxLength={6}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleCodeValidation();
-                }
-              }}
-            />
-            <Button
-              className="bg-[#2C3E50] hover:bg-gray-700 text-white"
-              onClick={handleCodeValidation}
-              disabled={validateCodeMutation.isPending || customerCode.length !== 6}
-            >
-              {validateCodeMutation.isPending ? "Validating..." : "Validate"}
-            </Button>
-          </div>
-          <p className="text-sm text-gray-500 mt-2 text-center">
-            Enter the 6-digit code shown on the customer's phone
-          </p>
-        </div>
+        <Card className="card-base">
+          <CardContent className="p-8">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Customer Code Entry</h3>
+                <p className="text-sm text-text-muted">
+                  Enter the 6-digit code shown on the customer's phone
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <div className="flex-1 relative">
+                  <Hash className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted" />
+                  <Input
+                    type="text"
+                    placeholder="000000"
+                    value={customerCode}
+                    onChange={(e) => setCustomerCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    className="input-base text-center text-3xl font-mono tracking-widest pl-12"
+                    maxLength={6}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCodeValidation();
+                      }
+                    }}
+                  />
+                </div>
+                <Button
+                  className="btn-primary px-8"
+                  onClick={handleCodeValidation}
+                  disabled={validateCodeMutation.isPending || customerCode.length !== 6}
+                >
+                  {validateCodeMutation.isPending ? "Validating..." : "Validate"}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </>
+    </AppShell>
   );
 }

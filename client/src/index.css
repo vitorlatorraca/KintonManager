@@ -3,55 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 7%);
-  --foreground: hsl(51, 100%, 50%);
-  --card: hsl(0, 0%, 10%);
-  --card-foreground: hsl(51, 100%, 50%);
-  --popover: hsl(0, 0%, 10%);
-  --popover-foreground: hsl(51, 100%, 50%);
-  --primary: hsl(51, 100%, 50%);
-  --primary-foreground: hsl(0, 0%, 0%);
-  --secondary: hsl(0, 0%, 15%);
-  --secondary-foreground: hsl(51, 100%, 50%);
-  --muted: hsl(0, 0%, 20%);
-  --muted-foreground: hsl(0, 0%, 60%);
-  --accent: hsl(51, 100%, 50%);
-  --accent-foreground: hsl(0, 0%, 0%);
-  --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(0, 0%, 20%);
-  --input: hsl(0, 0%, 15%);
-  --ring: hsl(51, 100%, 50%);
+  --background: #0b0f14;
+  --foreground: #e6edf3;
+  --card: #0f141a;
+  --card-foreground: #e6edf3;
+  --popover: #0f141a;
+  --popover-foreground: #e6edf3;
+  --primary: #7c3aed;
+  --primary-foreground: #ffffff;
+  --secondary: #1e2936;
+  --secondary-foreground: #e6edf3;
+  --muted: #1b2531;
+  --muted-foreground: #9AA7B2;
+  --accent: #7c3aed;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1e2936;
+  --input: #1e2936;
+  --ring: #7c3aed;
   --radius: 0.75rem;
-
-  /* Kinton Brand Colors */
-  --kinton-yellow: hsl(51, 100%, 50%);
-  --kinton-yellow-bright: hsl(51, 100%, 60%);
-  --kinton-black: hsl(0, 0%, 0%);
-  --kinton-dark-gray: hsl(0, 0%, 10%);
-  --kinton-medium-gray: hsl(0, 0%, 20%);
 }
 
 .dark {
-  --background: hsl(0, 0%, 7%);
-  --foreground: hsl(51, 100%, 50%);
-  --card: hsl(0, 0%, 10%);
-  --card-foreground: hsl(51, 100%, 50%);
-  --popover: hsl(0, 0%, 10%);
-  --popover-foreground: hsl(51, 100%, 50%);
-  --primary: hsl(51, 100%, 50%);
-  --primary-foreground: hsl(0, 0%, 0%);
-  --secondary: hsl(0, 0%, 15%);
-  --secondary-foreground: hsl(51, 100%, 50%);
-  --muted: hsl(0, 0%, 20%);
-  --muted-foreground: hsl(0, 0%, 60%);
-  --accent: hsl(51, 100%, 50%);
-  --accent-foreground: hsl(0, 0%, 0%);
-  --destructive: hsl(0, 62.8%, 30.6%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(0, 0%, 20%);
-  --input: hsl(0, 0%, 15%);
-  --ring: hsl(51, 100%, 50%);
+  --background: #0b0f14;
+  --foreground: #e6edf3;
+  --card: #0f141a;
+  --card-foreground: #e6edf3;
+  --popover: #0f141a;
+  --popover-foreground: #e6edf3;
+  --primary: #7c3aed;
+  --primary-foreground: #ffffff;
+  --secondary: #1e2936;
+  --secondary-foreground: #e6edf3;
+  --muted: #1b2531;
+  --muted-foreground: #9AA7B2;
+  --accent: #7c3aed;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1e2936;
+  --input: #1e2936;
+  --ring: #7c3aed;
 }
 
 @layer base {
@@ -60,11 +53,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-bold;
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, sans-serif;
+    @apply bg-bg text-text-primary;
+    background: #0b0f14;
+    font-family: Inter, "SF Pro Text", system-ui, sans-serif;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
@@ -73,248 +67,76 @@
   h4,
   h5,
   h6 {
-    @apply font-bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    @apply font-bold text-text-primary;
+    line-height: 1.2;
+  }
+
+  h1 {
+    @apply text-5xl font-extrabold tracking-[-0.02em];
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-xl font-bold;
   }
 }
 
 @layer components {
-  .kinton-yellow {
-    color: #ffd700;
+  /* Card base style */
+  .card-base {
+    @apply rounded-2xl border border-border bg-card shadow-card;
   }
 
-  .kinton-bg {
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  /* Button styles */
+  .btn-primary {
+    @apply px-5 py-3 rounded-full bg-accent text-white hover:bg-accent-hover transition-all duration-150 font-medium;
   }
 
-  .kinton-card {
-    background: rgba(255, 215, 0, 0.05);
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
+  .btn-ghost {
+    @apply px-5 py-3 rounded-full border border-border bg-transparent hover:bg-card-hover transition-all duration-150 font-medium text-text-primary;
   }
 
-  .kinton-button {
-    background: linear-gradient(45deg, #ffd700, #ffa500);
-    color: #000;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all 0.3s ease;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  .btn-secondary {
+    @apply px-5 py-3 rounded-full border border-border bg-card hover:bg-card-hover transition-all duration-150 font-medium text-text-primary;
   }
 
-  .kinton-button:hover {
-    background: linear-gradient(45deg, #ffa500, #ffd700);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  /* Input styles */
+  .input-base {
+    @apply bg-card border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg transition-all duration-150;
   }
 
-  .kinton-button:active {
-    transform: translateY(0);
+  /* Progress bar */
+  .progress-bar {
+    @apply h-2 rounded-full bg-line relative overflow-hidden;
   }
 
-  .kinton-text-shadow {
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  }
-
-  .kinton-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #ffd700;
-  }
-
-  .kinton-tab {
-    background: transparent;
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    color: #ffd700;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all 0.3s ease;
-  }
-
-  .kinton-tab.active {
-    background: linear-gradient(45deg, #ffd700, #ffa500);
-    color: #000;
-    border-color: #ffd700;
-  }
-
-  .kinton-tab:hover {
-    border-color: #ffd700;
-    background: rgba(255, 215, 0, 0.1);
-  }
-
-  .kinton-input {
-    background: rgba(255, 215, 0, 0.05);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    color: #ffd700;
-    border-radius: 8px;
-    padding: 12px;
-    font-weight: 500;
-  }
-
-  .kinton-input:focus {
-    border-color: #ffd700;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-    outline: none;
-  }
-
-  .kinton-input::placeholder {
-    color: rgba(255, 215, 0, 0.6);
-  }
-
-  .kinton-stamp {
-    background: linear-gradient(45deg, #ffd700, #ffa500);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    font-weight: bold;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-  }
-
-  .kinton-stamp.empty {
-    background: rgba(255, 215, 0, 0.1);
-    border: 2px dashed rgba(255, 215, 0, 0.3);
-    color: rgba(255, 215, 0, 0.5);
-  }
-
-  .kinton-progress {
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .kinton-progress-bar {
-    background: linear-gradient(90deg, #ffd700, #ffa500);
-    height: 100%;
-    transition: width 0.5s ease;
-    border-radius: 12px;
-  }
-
-  .kinton-qr-container {
-    background: #ffd700;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
-  }
-
-  .kinton-reward-badge {
-    background: linear-gradient(45deg, #ffd700, #ffa500);
-    color: #000;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  .progress-bar-fill {
+    @apply absolute inset-y-0 left-0 rounded-full transition-all duration-300;
   }
 }
 
 @layer utilities {
-  .progress-ring {
-    transform: rotate(-90deg);
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-150;
   }
 
-  .progress-ring-circle {
-    transition: stroke-dashoffset 0.35s;
-    transform-origin: 50% 50%;
+  .hover-lift:hover {
+    @apply -translate-y-[1px];
   }
 
-  .qr-scanner-overlay {
-    background: linear-gradient(
-      45deg,
-      transparent 30%,
-      rgba(255, 215, 0, 0.1) 30%,
-      rgba(255, 215, 0, 0.1) 70%,
-      transparent 70%
-    );
-    background-size: 30px 30px;
-    animation: scanner-move 2s linear infinite;
+  /* Fade in animation */
+  .fade-in {
+    animation: fade-in 0.5s ease-out;
   }
 
-  @keyframes scanner-move {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: 30px 30px;
-    }
-  }
-
-  .stamp-bounce {
-    animation: stamp-bounce 0.6s ease-in-out;
-  }
-
-  @keyframes stamp-bounce {
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-30px);
-    }
-    60% {
-      transform: translateY(-15px);
-    }
-  }
-
-  .reward-celebration {
-    animation: celebration 1s ease-in-out;
-  }
-
-  @keyframes celebration {
-    0% {
-      transform: scale(0) rotate(0deg);
-    }
-    50% {
-      transform: scale(1.2) rotate(180deg);
-    }
-    100% {
-      transform: scale(1) rotate(360deg);
-    }
-  }
-
-  .kinton-glow {
-    animation: kinton-glow 2s ease-in-out infinite alternate;
-  }
-
-  @keyframes kinton-glow {
-    from {
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-    to {
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-    }
-  }
-
-  .kinton-fade-in {
-    animation: kinton-fade-in 0.5s ease-out;
-  }
-
-  @keyframes kinton-fade-in {
+  @keyframes fade-in {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;

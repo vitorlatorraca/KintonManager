@@ -9,14 +9,45 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "16px",
+        "2xl": "20px",
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        bg: {
+          DEFAULT: "#0b0f14",
+          soft: "#0f141a",
+        },
         card: {
-          DEFAULT: "var(--card)",
+          DEFAULT: "#0f141a",
+          hover: "#121a22",
           foreground: "var(--card-foreground)",
         },
+        border: "#1e2936",
+        line: "#1b2531",
+        text: {
+          primary: "#e6edf3",
+          muted: "#9AA7B2",
+          dim: "#7c8b97",
+        },
+        accent: {
+          DEFAULT: "#7c3aed",
+          hover: "#6d28d9",
+          foreground: "#ffffff",
+        },
+        info: "#22d3ee",
+        success: "#22c55e",
+        warning: "#f59e0b",
+        danger: "#ef4444",
+        bar: {
+          groceries: "#22d3ee",
+          transport: "#60a5fa",
+          rent: "#a78bfa",
+          subs: "#f472b6",
+          savings: "#34d399",
+        },
+        // Mantendo compatibilidade com shadcn/ui
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         popover: {
           DEFAULT: "var(--popover)",
           foreground: "var(--popover-foreground)",
@@ -33,15 +64,10 @@ export default {
           DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
         },
-        accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
-        },
         destructive: {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
         },
-        border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         chart: {
@@ -61,6 +87,15 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+      },
+      boxShadow: {
+        card: "0 1px 0 rgba(255,255,255,0.02), 0 8px 30px rgba(0,0,0,0.35)",
+      },
+      fontFamily: {
+        sans: ["Inter", "SF Pro Text", "system-ui", "sans-serif"],
+      },
+      spacing: {
+        13: "3.25rem",
       },
       keyframes: {
         "accordion-down": {

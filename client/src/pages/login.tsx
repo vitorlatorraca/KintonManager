@@ -12,8 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
-import TabNavigation from "@/components/tab-navigation";
-import KintonLogo from "@/components/kinton-logo";
+import AppShell from "@/components/app-shell";
 
 const loginSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 characters"),
@@ -62,23 +61,24 @@ export default function Login() {
   };
 
   return (
-    <>
-      <TabNavigation />
-      <div className="p-6 space-y-6">
+    <AppShell>
+      <div className="max-w-md mx-auto py-12">
         <div className="text-center mb-8">
-          <KintonLogo size="lg" className="mb-6" />
-          <p className="kinton-yellow text-lg font-bold">
-            COLLECT STAMPS, EARN FREE GYOZA!
+          <h1 className="text-4xl font-extrabold tracking-[-0.02em] text-text-primary mb-3">
+            Welcome back
+          </h1>
+          <p className="text-base text-text-muted">
+            Sign in to your Kinton Manager account
           </p>
         </div>
 
-        <Card className="kinton-card">
+        <Card className="card-base">
           <CardContent className="pt-6">
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <div>
                 <Label
                   htmlFor="phone"
-                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Phone Number
                 </Label>
@@ -87,10 +87,10 @@ export default function Login() {
                   type="tel"
                   placeholder="+1 (555) 123-4567"
                   {...form.register("phone")}
-                  className="kinton-input w-full"
+                  className="input-base w-full"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.phone.message}
                   </p>
                 )}
@@ -99,7 +99,7 @@ export default function Login() {
               <div>
                 <Label
                   htmlFor="password"
-                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Password
                 </Label>
@@ -109,12 +109,12 @@ export default function Login() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     {...form.register("password")}
-                    className="kinton-input w-full pr-12"
+                    className="input-base w-full pr-12"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 kinton-yellow hover:text-[#FFA500] transition-colors"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -124,7 +124,7 @@ export default function Login() {
                   </button>
                 </div>
                 {form.formState.errors.password && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.password.message}
                   </p>
                 )}
@@ -132,21 +132,21 @@ export default function Login() {
 
               <Button
                 type="submit"
-                className="w-full kinton-button py-4 text-lg"
+                className="w-full btn-primary py-3"
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? "SIGNING IN..." : "SIGN IN"}
+                {loginMutation.isPending ? "Signing in..." : "Sign in"}
               </Button>
             </form>
 
-            <div className="mt-8 text-center">
-              <div className="border-t border-[#FFD700]/20 pt-6">
+            <div className="mt-6 text-center">
+              <div className="border-t border-line pt-6">
+                <p className="text-sm text-text-muted mb-3">
+                  Don't have an account?
+                </p>
                 <Link href="/register">
-                  <Button
-                    variant="link"
-                    className="kinton-yellow hover:text-[#FFA500] p-0 text-base font-bold uppercase tracking-wide"
-                  >
-                    Don't have an account? <span className="ml-2">REGISTER</span>
+                  <Button variant="ghost" className="btn-ghost">
+                    Create account
                   </Button>
                 </Link>
               </div>
@@ -154,6 +154,6 @@ export default function Login() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </AppShell>
   );
 }

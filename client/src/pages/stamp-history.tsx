@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
-import TabNavigation from "@/components/tab-navigation";
+import AppShell from "@/components/app-shell";
+import HeroTitle from "@/components/hero-title";
 
 export default function StampHistory() {
   const { user, token } = useAuth();
@@ -65,72 +66,67 @@ export default function StampHistory() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success/20 text-success border-success/30';
       case 'REDEEMED':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-text-muted/20 text-text-muted border-border';
       case 'EXPIRED':
-        return 'bg-red-100 text-red-800';
+        return 'bg-danger/20 text-danger border-danger/30';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-text-muted/20 text-text-muted border-border';
     }
   };
 
   if (isLoading) {
     return (
-      <>
-        <TabNavigation />
-        <div className="p-6">
-          <div className="flex items-center mb-6">
-            <Skeleton className="h-10 w-10 rounded-full mr-3" />
-            <Skeleton className="h-6 w-32" />
-          </div>
+      <AppShell showNav={false}>
+        <div className="max-w-3xl mx-auto space-y-6">
+          <Skeleton className="h-12 w-full" />
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-20 w-full rounded-lg" />
+              <Skeleton key={i} className="h-20 w-full rounded-2xl" />
             ))}
           </div>
         </div>
-      </>
+      </AppShell>
     );
   }
 
   return (
-    <>
-      <TabNavigation />
-      <div className="p-6">
-        <div className="flex items-center mb-6">
+    <AppShell showNav={false}>
+      <div className="max-w-3xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full hover:bg-gray-100 mr-3"
+            className="btn-ghost rounded-full"
             onClick={() => setLocation('/dashboard')}
           >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-xl font-bold text-[#2C3E50]">Stamp History</h2>
+          <HeroTitle className="text-3xl">Stamp History</HeroTitle>
         </div>
 
         {stamps && stamps.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {stamps.map((stamp: any, index: number) => (
-              <Card key={stamp.id} className="border border-gray-200">
-                <CardContent className="p-4">
+              <Card key={stamp.id} className="card-base hover-lift">
+                <CardContent className="p-5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
-                        stamp.status === 'REDEEMED' ? 'bg-gray-400' : 'bg-[#28A745]'
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        stamp.status === 'REDEEMED' ? 'bg-text-muted/20' : 'bg-success/20'
                       }`}>
                         {stamp.status === 'REDEEMED' ? (
-                          <Gift className="h-5 w-5 text-white" />
+                          <Gift className="h-6 w-6 text-success" />
                         ) : (
-                          <Stamp className="h-5 w-5 text-white" />
+                          <Stamp className="h-6 w-6 text-success" />
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-[#2C3E50]">
+                        <p className="font-semibold text-text-primary">
                           {stamp.status === 'REDEEMED' ? 'Used for Reward' : `Stamp #${stamps.length - index}`}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-text-muted">
                           {formatDate(stamp.createdAt)}
                         </p>
                       </div>
@@ -144,15 +140,15 @@ export default function StampHistory() {
             ))}
           </div>
         ) : (
-          <Card className="border-2 border-dashed border-gray-300">
-            <CardContent className="p-8 text-center">
-              <Stamp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No stamps yet</h3>
-              <p className="text-gray-600 mb-4">
+          <Card className="card-base border-dashed">
+            <CardContent className="p-12 text-center">
+              <Stamp className="h-16 w-16 mx-auto mb-4 text-text-muted" />
+              <h3 className="text-lg font-semibold text-text-primary mb-2">No stamps yet</h3>
+              <p className="text-text-muted mb-6">
                 Start collecting stamps by generating QR codes and showing them to staff!
               </p>
               <Button
-                className="bg-[#FF6B35] hover:bg-[#E55A2E] text-white"
+                className="btn-primary"
                 onClick={() => setLocation('/qr-code')}
               >
                 Generate Your First QR
@@ -161,6 +157,6 @@ export default function StampHistory() {
           </Card>
         )}
       </div>
-    </>
+    </AppShell>
   );
 }

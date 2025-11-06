@@ -12,8 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
-import TabNavigation from "@/components/tab-navigation";
-import KintonLogo from "@/components/kinton-logo";
+import AppShell from "@/components/app-shell";
 
 const registerSchema = z
   .object({
@@ -73,23 +72,24 @@ export default function Register() {
   };
 
   return (
-    <>
-      <TabNavigation />
-      <div className="p-6">
+    <AppShell>
+      <div className="max-w-md mx-auto py-12">
         <div className="text-center mb-8">
-          <KintonLogo size="lg" className="mb-6" />
-          <p className="kinton-yellow text-lg font-bold">
-            JOIN KINTON RAMEN!
+          <h1 className="text-4xl font-extrabold tracking-[-0.02em] text-text-primary mb-3">
+            Create account
+          </h1>
+          <p className="text-base text-text-muted">
+            Join Kinton Manager to start collecting stamps
           </p>
         </div>
 
-        <Card className="kinton-card">
+        <Card className="card-base">
           <CardContent className="pt-6">
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <div>
                 <Label
                   htmlFor="name"
-                  className="block text-sm font-bold kinton-yellow mb-3 uppercase tracking-wide"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Full Name
                 </Label>
@@ -98,10 +98,10 @@ export default function Register() {
                   type="text"
                   placeholder="Enter your full name"
                   {...form.register("name")}
-                  className="kinton-input w-full"
+                  className="input-base w-full"
                 />
                 {form.formState.errors.name && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.name.message}
                   </p>
                 )}
@@ -110,7 +110,7 @@ export default function Register() {
               <div>
                 <Label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Phone Number
                 </Label>
@@ -119,10 +119,10 @@ export default function Register() {
                   type="tel"
                   placeholder="+1 (555) 123-4567"
                   {...form.register("phone")}
-                  className="w-full"
+                  className="input-base w-full"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.phone.message}
                   </p>
                 )}
@@ -131,7 +131,7 @@ export default function Register() {
               <div>
                 <Label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Password
                 </Label>
@@ -141,22 +141,22 @@ export default function Register() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     {...form.register("password")}
-                    className="w-full pr-10"
+                    className="input-base w-full pr-12"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff className="w-5 h-5" />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-5 h-5" />
                     )}
                   </button>
                 </div>
                 {form.formState.errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.password.message}
                   </p>
                 )}
@@ -165,7 +165,7 @@ export default function Register() {
               <div>
                 <Label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-text-primary mb-2"
                 >
                   Confirm Password
                 </Label>
@@ -175,24 +175,24 @@ export default function Register() {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     {...form.register("confirmPassword")}
-                    className="w-full pr-10"
+                    className="input-base w-full pr-12"
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setShowConfirmPassword(!showConfirmPassword)
                     }
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff className="w-5 h-5" />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-5 h-5" />
                     )}
                   </button>
                 </div>
                 {form.formState.errors.confirmPassword && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-danger text-sm mt-2 font-medium">
                     {form.formState.errors.confirmPassword.message}
                   </p>
                 )}
@@ -200,29 +200,30 @@ export default function Register() {
 
               <Button
                 type="submit"
-                className="w-full bg-[#FF6B35] hover:bg-[#E55A2E] text-white py-3"
+                className="w-full btn-primary py-3"
                 disabled={registerMutation.isPending}
               >
                 {registerMutation.isPending
                   ? "Creating account..."
-                  : "Create Account"}
+                  : "Create account"}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
-              <Link href="/">
-                <Button
-                  variant="link"
-                  className="text-[#2C3E50] hover:underline p-0"
-                >
-                  Already have an account?{" "}
-                  <span className="font-medium ml-1">Sign In</span>
-                </Button>
-              </Link>
+              <div className="border-t border-line pt-6">
+                <p className="text-sm text-text-muted mb-3">
+                  Already have an account?
+                </p>
+                <Link href="/login">
+                  <Button variant="ghost" className="btn-ghost">
+                    Sign in
+                  </Button>
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-    </>
+    </AppShell>
   );
 }

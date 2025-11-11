@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { ExternalLink } from "lucide-react";
 import KintonLogo from "@/components/kinton-logo";
 
@@ -24,20 +23,6 @@ export default function LandingFooter() {
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-text-primary">Links</h4>
             <ul className="space-y-2">
-              <li>
-                <Link href="/dashboard">
-                  <span className="text-sm text-text-muted hover:text-text-primary transition-colors cursor-pointer">
-                    Client Portal
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/manager/dashboard">
-                  <span className="text-sm text-text-muted hover:text-text-primary transition-colors cursor-pointer">
-                    Manager Portal
-                  </span>
-                </Link>
-              </li>
               <li>
                 <a
                   href="https://github.com/vitorlatorraca/KintonManager"

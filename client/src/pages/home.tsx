@@ -18,14 +18,32 @@ export default function Home() {
         {/* Story Section */}
         <section className="py-20 bg-card/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto space-y-6 mb-16">
+            <div className="text-center max-w-4xl mx-auto space-y-6 mb-16">
               <h2 className="text-4xl font-extrabold tracking-[-0.02em] text-text-primary">
-                Built for the digital era
+                The Story Behind Kinton Manager
               </h2>
-              <p className="text-xl text-text-muted leading-relaxed">
-                Kinton Manager was built to bring the Kinton Ramen loyalty program into the digital era. 
-                No more paper cards — just scan, collect, and enjoy your free ramen.
-              </p>
+              <div className="space-y-4 text-left text-lg text-text-muted leading-relaxed">
+                <p>
+                  It all started when I realized that my restaurant's loyalty card system needed modernization. 
+                  Paper cards were practical, but they had limitations: they were easily lost, there was no way to track customer history, 
+                  and the validation process was manual and time-consuming.
+                </p>
+                <p>
+                  That's when I thought: why not create a digital solution that maintained the simplicity of physical cards, but with 
+                  all the benefits of modern technology? That's how Kinton Manager was born — a complete platform that digitizes the 
+                  restaurant's loyalty program.
+                </p>
+                <p>
+                  The system works simply: each customer receives a unique 6-digit code that can be easily validated by staff at the 
+                  point of purchase. With each purchase, the customer earns a digital "stamp". When they complete 10 stamps, they earn 
+                  10 free gyozas! All of this securely, quickly, and without the need to carry physical cards.
+                </p>
+                <p>
+                  Additionally, Kinton Manager offers a complete dashboard for managers, allowing them to track real-time metrics, 
+                  validate customer codes, manage rewards, and gain valuable insights into customer behavior. It's a complete solution 
+                  that transforms the experience for both customers and the restaurant team.
+                </p>
+              </div>
             </div>
 
             {/* Feature Cards */}
@@ -184,22 +202,13 @@ export default function Home() {
                 Experience Kinton Manager today. Try the demo or explore the codebase.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Link href="/login">
                 <Button className="btn-primary bg-[#e63946] hover:bg-[#d62839] text-white px-8 py-6 text-lg">
                   Try Demo
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <a
-                href="https://github.com/vitorlatorraca/KintonManager"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline" className="btn-secondary px-8 py-6 text-lg">
-                  View on GitHub
-                </Button>
-              </a>
             </div>
           </div>
         </section>

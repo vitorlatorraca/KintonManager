@@ -25,13 +25,8 @@ export default function LandingHero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/login">
                 <Button className="btn-primary bg-[#e63946] hover:bg-[#d62839] text-white px-8 py-6 text-lg">
-                  Client Portal
+                  Try Demo
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/manager">
-                <Button variant="outline" className="btn-secondary px-8 py-6 text-lg">
-                  Manager Portal
                 </Button>
               </Link>
             </div>

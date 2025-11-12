@@ -537,6 +537,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Only create HTTP server in non-serverless environments
+  // In Vercel, we don't need to create/listen to a server
+  if (process.env.VERCEL) {
+    // Return a dummy object to satisfy the return type
+    return {} as Server;
+  }
+  
   const httpServer = createServer(app);
   return httpServer;
 }

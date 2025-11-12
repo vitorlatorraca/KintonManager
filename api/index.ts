@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { registerRoutes } from '../server/routes.js';
+import type { Express } from 'express';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +24,13 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 // Initialize routes and static files
 let initPromise: Promise<void> | null = null;
 
+async function registerRoutes(app: Express): Promise<void> {
+  // Dynamic import to avoid issues with ESM
+  const { registerRoutes: registerRoutesImpl } = await import('../server/routes.js');
+  // We don't need the server, just register routes
+  await registerRoutesImpl(app);
+}
+
 async function initialize() {
   if (initPromise) return initPromise;
   
@@ -31,8 +38,29 @@ async function initialize() {
     try {
       console.log('Initializing Vercel handler...');
       console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
+      console.log('NODE_ENV:', process.env.NODE_ENV);
+      console.log('VERCEL:', process.env.VERCEL ? 'Yes' : 'No');
       
-      // Register API routes (creates HTTP server but we don't need to listen)
+      // Rota de teste simples (antes de inicializar o banco)
+      app.get('/api/test', (_req, res) => {
+        res.json({ 
+          status: 'ok', 
+          message: 'API is working',
+          timestamp: new Date().toISOString(),
+          env: {
+            hasDatabaseUrl: !!process.env.DATABASE_URL,
+            nodeEnv: process.env.NODE_ENV,
+            isVercel: !!process.env.VERCEL
+          }
+        });
+      });
+      
+      if (!process.env.DATABASE_URL) {
+        console.error('ERROR: DATABASE_URL environment variable is not set');
+        throw new Error('DATABASE_URL environment variable is not set');
+      }
+      
+      // Register API routes
       await registerRoutes(app);
       console.log('Routes registered');
       
